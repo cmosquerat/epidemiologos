@@ -1,38 +1,399 @@
+
 {% load static %}
+
+{% block extra_css %}
+
+        <!-- DataTables -->
+        <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables.net-select-bs4/css//select.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+        <!-- Responsive datatable examples -->
+        <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />     
+
+{% endblock extra_css %}
+
 {% block content %}
 <div class="row">
 	<div class="row">
-		<div class="col-xl-8">
-			<div class="row">
-				<div class="col-md-4">
-					<div class="card">
-						<div class="card-body">
-							<div class="d-flex">
-								<div class="flex-1 overflow-hidden">
-									<p class="text-truncate font-size-14 mb-2">Número de pacientes</p>
-									<h4 class="mb-0">{{observaciones}}</h4>
-								</div>
-								<div class="text-primary ms-auto"> <i class="ri-stack-line font-size-24"></i>
-								</div>
-							</div>
-						</div>
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
 
+						<h4 class="card-title">Buttons Example</h4>
+						<p class="card-title-desc">The Buttons extension for DataTables
+							provides a common set of options, API methods and styling to display
+							buttons on a page that will interact with a DataTable. The core library
+							provides the based framework upon which plug-ins can built.
+						</p>
+
+						<table id="datatable-buttons" class="table table-striped table-bordered" style=" width: 100%;">
+							{% autoescape off %}
+							{{tabla}}
+							{% endautoescape %}
+						</table>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="card">
-						<div class="card-body">
-							<div class="d-flex">
-								{% autoescape off %}
-								{{ plot_div }}
-								{% endautoescape %}
+			</div> <!-- end col -->
+		</div> <!-- end row -->
+
+
+		<div class="row">
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<div class="d-flex">
+							<div class="flex-1 overflow-hidden">
+								<p class="text-truncate font-size-14 mb-2">Número de pacientes</p>
+								<h4 class="mb-0">{{observaciones}}</h4>
+							</div>
+							<div class="text-primary ms-auto"> <i class="ri-stack-line font-size-24"></i>
 							</div>
 						</div>
-
 					</div>
-				</div>
 
+				</div>
 			</div>
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<div class="d-flex">
+							<div class="flex-1 overflow-hidden">
+								<p class="text-truncate font-size-14 mb-2">Número de pacientes fallecidos a 5 años</p>
+								<h4 class="mb-0">{{fallecidos}}</h4>
+							</div>
+							<div class="text-primary ms-auto"> <i class="ri-stack-line font-size-24"></i>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<div class="d-flex">
+							<div class="flex-1 overflow-hidden">
+								<p class="text-truncate font-size-14 mb-2">Número de pacientes no fallecidos a 5 años</p>
+								<h4 class="mb-0">{{no_fallecidos}}</h4>
+							</div>
+							<div class="text-primary ms-auto"> <i class="ri-stack-line font-size-24"></i>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<div class="d-flex">
+							<div class="flex-1 overflow-hidden">
+								<p class="text-truncate font-size-14 mb-2">Número de pacientes con función renal alterada</p>
+								<h4 class="mb-0">{{funcion}}</h4>
+							</div>
+							<div class="text-primary ms-auto"> <i class="ri-stack-line font-size-24"></i>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<div class="d-flex">
+							<div class="flex-1 overflow-hidden">
+								<p class="text-truncate font-size-14 mb-2">Número de pacientes con etilogía CAKUT</p>
+								<h4 class="mb-0">{{Cakut}}</h4>
+							</div>
+							<div class="text-primary ms-auto"> <i class="ri-stack-line font-size-24"></i>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+
+			
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<div class="d-flex">
+							<div class="flex-1 overflow-hidden">
+								<p class="text-truncate font-size-14 mb-2">Número de pacientes con etilogía No CAKUT</p>
+								<h4 class="mb-0">{{No_Cakut}}</h4>
+							</div>
+							<div class="text-primary ms-auto"> <i class="ri-stack-line font-size-24"></i>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+
+
+			</div> <!-- end row -->
+
+
+
+		<div class="row">
+
+			<div class="col-xl-4">
+				{% autoescape off %}
+				{{plot_div}}
+				{% endautoescape %}
+			</div>
+
+			<div class="col-xl-4">
+				{% autoescape off %}
+				{{plot_edad}}
+				{% endautoescape %}
+			</div>
+
+			<div class="col-xl-4">
+				{% autoescape off %}
+				{{plot_etiologia}}
+				{% endautoescape %}
+			</div>
+
+
+		</div> <!-- end row -->
+
+
+		<div class="row">
+
+			<div class="col-xl-4">
+				{% autoescape off %}
+				{{plot_funcion}}
+				{% endautoescape %}
+			</div>
+
+			<div class="col-xl-4">
+				{% autoescape off %}
+				{{plot_cakut}}
+				{% endautoescape %}
+			</div>
+
+			<div class="col-xl-4">
+				{% autoescape off %}
+				{{plot_nocakut}}
+				{% endautoescape %}
+			</div>
+
+
+		</div> <!-- end row -->
+
+
+		<div class="row">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-body">
+	
+							<h4 class="card-title">Buttons Example</h4>
+							<p class="card-title-desc">The Buttons extension for DataTables
+								provides a common set of options, API methods and styling to display
+								buttons on a page that will interact with a DataTable. The core library
+								provides the based framework upon which plug-ins can built.
+							</p>
+	
+								{% autoescape off %}
+								{{corr1}}
+								{% endautoescape %}
+							
+						</div>
+					</div>
+				</div> <!-- end col -->
+			</div> <!-- end row -->
+		</div>
+
+
+		<div class="row">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-body">
+	
+							<h4 class="card-title">Buttons Example</h4>
+							<p class="card-title-desc">The Buttons extension for DataTables
+								provides a common set of options, API methods and styling to display
+								buttons on a page that will interact with a DataTable. The core library
+								provides the based framework upon which plug-ins can built.
+							</p>
+	
+								{% autoescape off %}
+								{{corr2}}
+								{% endautoescape %}
+							
+						</div>
+					</div>
+				</div> <!-- end col -->
+			</div> <!-- end row -->
+		</div>
+
+
+		<div class="row">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-body">
+	
+							<h4 class="card-title">Buttons Example</h4>
+							<p class="card-title-desc">The Buttons extension for DataTables
+								provides a common set of options, API methods and styling to display
+								buttons on a page that will interact with a DataTable. The core library
+								provides the based framework upon which plug-ins can built.
+							</p>
+	
+								{% autoescape off %}
+								{{io}}
+								{% endautoescape %}
+							
+						</div>
+					</div>
+				</div> <!-- end col -->
+			</div> <!-- end row -->
+		</div>
+
+
+
+
+		<div class="row">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-body">
+	
+							<h4 class="card-title">Buttons Example</h4>
+							<p class="card-title-desc">The Buttons extension for DataTables
+								provides a common set of options, API methods and styling to display
+								buttons on a page that will interact with a DataTable. The core library
+								provides the based framework upon which plug-ins can built.
+							</p>
+	
+								{% autoescape off %}
+								{{linear}}
+								{% endautoescape %}
+							
+						</div>
+					</div>
+				</div> <!-- end col -->
+			</div> <!-- end row -->
+		</div>
+
+
+			<div class="row">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+		
+								<h4 class="card-title">Buttons Example</h4>
+								<p class="card-title-desc">The Buttons extension for DataTables
+									provides a common set of options, API methods and styling to display
+									buttons on a page that will interact with a DataTable. The core library
+									provides the based framework upon which plug-ins can built.
+								</p>
+		
+									{% autoescape off %}
+									{{dialisis}}
+									{% endautoescape %}
+								
+							</div>
+						</div>
+					</div> <!-- end col -->
+				</div> <!-- end row -->
+			</div>
+				
+
+				<div class="row">
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+			
+									<h4 class="card-title">Buttons Example</h4>
+									<p class="card-title-desc">The Buttons extension for DataTables
+										provides a common set of options, API methods and styling to display
+										buttons on a page that will interact with a DataTable. The core library
+										provides the based framework upon which plug-ins can built.
+									</p>
+			
+										{% autoescape off %}
+										{{muerte}}
+										{% endautoescape %}
+									
+								</div>
+							</div>
+						</div> <!-- end col -->
+					</div> <!-- end row -->
+				</div>
+
+
+				<div class="row">
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+			
+									<h4 class="card-title">Buttons Example</h4>
+									<p class="card-title-desc">The Buttons extension for DataTables
+										provides a common set of options, API methods and styling to display
+										buttons on a page that will interact with a DataTable. The core library
+										provides the based framework upon which plug-ins can built.
+									</p>
+			
+										{% autoescape off %}
+										{{etiologia_funcion}}
+										{% endautoescape %}
+									
+								</div>
+							</div>
+						</div> <!-- end col -->
+					</div> <!-- end row -->
+				</div>
+	
+
 		</div>
 		<!-- end row -->
+
+		
+
 		{% endblock content %}
+
+		{% block extra_javascript %}
+        <!-- Required datatable js -->
+        <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+        <!-- Buttons examples -->
+        <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+        <script src="{% static 'libs/jszip/jszip.min.js' %}"></script>
+        <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+        <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+
+        <script src="{% static 'libs/datatables.net-keytable/js/dataTables.keyTable.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-select/js/dataTables.select.min.js' %}"></script>
+        
+        <!-- Responsive examples -->
+        <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+        <!-- Datatable init js -->
+        <script src="{% static 'js/pages/datatables.init.js' %}"></script>
+{% endblock extra_javascript %}

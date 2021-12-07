@@ -45,8 +45,10 @@ INSTALLED_APPS = [
     'components',
     'authentication',
     'crispy_forms',
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -156,7 +158,3 @@ LOGIN_REDIRECT_URL = 'auth-login'
 # LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-SESSION_EXPIRE_SECONDS = 90  # 3 minute
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 1 # group by minute 
-SESSION_TIMEOUT_REDIRECT = 'auth-lock-screen'

@@ -20,8 +20,14 @@ from nazox import views
 
 urlpatterns = [
     # Menu
+    
     path('',views.TrasplanteView.as_view(),name='trasplante'),# Trasplante   
-    path('',views.DashboardView.as_view(),name='dashboard'),# Dashboard
+    path('menu/eda',views.EdaView.as_view(),name='eda'),# Trasplante  
+    path('menu/upload',views.UploadView.as_view(),name='update'),# Trasplante  
+    path('menu/',views.DashboardView.as_view(),name='dashboard'),# Dashboard
+
+
+
     path('menu/calendar',views.CalendarView.as_view(),name='calendar'),# Calender
     path('menu/chat',views.ChatView.as_view(),name='chat'),# Chat
     path('menu/app-kanban-board',views.KanbanBoardView.as_view(),name='app-kanban-board'),# Kanban Board

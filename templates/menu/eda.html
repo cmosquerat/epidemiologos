@@ -1,0 +1,37 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block extra_css %}
+        <!-- Plugins css -->
+        
+        <link href="{% static 'libs/dropzone/min/dropzone.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block content %}                        
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+        
+                                        <h4 class="card-title">Análisis Exploratorio</h4>
+                                        <p class="card-title-desc">Prueba
+                                        </p>
+
+                                        <object data="{% static 'pdf/eda1.pdf' %}" style="width: 100%; height: 1000px; display: block;"></object>
+                                        
+                                        
+
+                                       
+
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+{% endblock content %}	
+
+
+
+{% block extra_javascript %}
+        <!-- Plugins js -->
+        <script src="{% static 'libs/dropzone/min/dropzone.min.js' %}"></script>
+{% endblock extra_javascript %}
