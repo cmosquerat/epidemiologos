@@ -19,7 +19,8 @@ from django.urls.conf import include
 from nazox import views
 
 urlpatterns = [
-    # Menu    
+    # Menu
+    path('',views.TrasplanteView.as_view(),name='trasplante'),# Trasplante   
     path('',views.DashboardView.as_view(),name='dashboard'),# Dashboard
     path('menu/calendar',views.CalendarView.as_view(),name='calendar'),# Calender
     path('menu/chat',views.ChatView.as_view(),name='chat'),# Chat
