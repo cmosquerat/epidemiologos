@@ -304,8 +304,7 @@ def get_iocorr(df,input,output):
     x=input.columns,
     y=output.columns,
     colorscale=px.colors.diverging.RdBu,
-    zmin=-1,
-    zmax=1
+
 )
 
 
