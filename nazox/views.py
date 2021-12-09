@@ -12,6 +12,183 @@ import plotly.figure_factory as ff
 from dython import nominal
 
 
+
+
+
+# Epilepsia
+class EpilepsiaView(LoginRequiredMixin,View):
+    def get(self, request):
+
+        print(request.session)
+        
+        con = sqlite3.connect(settings.DATABASES['default']['NAME'])
+
+        df = pd.read_sql_query("SELECT * from epilepsia", con)
+
+        observaciones = len(df.index) 
+
+        data = df.groupby("SEXO")["SEXO"].count()
+        labels = data.keys()
+        graphs =  px.pie(data, values="SEXO",names=labels)
+        graphs.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+        graphs.update_layout(  font=dict(
+                size=18,
+                
+            ))
+
+       
+
+        # Setting layout of the figure.
+        layout = {
+            'title': 'Sexo de pacientes',
+            'xaxis_title': 'Sexo',
+            'yaxis_title': 'Cantidad',
+        }
+
+
+        orden = ['CLINICA', 'EDAD', 'SEXO', 'TIPO_DE_EPILEPSIA', 'TIPO',
+       'FARMACOS__1', 'FARMACO_2', 'RAZONAMIENTO_LÓGICO_RR',
+       'RAZONAMIENTO_LÓGICO_RR.1', 'ALTERACIÓN_RR', 'FACTOR_VERBAL__VV',
+       'FACTOR_VERBAL__VV.1', 'ALTERACIÓN_VV', 'FACTOR_NUMÉRICO_NN',
+       'FACTOR_NUMÉRICO_NN.1', 'ALTERACIÓN_NN', 'FACTOR_VISOESPACIAL_EE',
+       'FACTOR_VISOESPACIAL_EE.1', 'ALTERACION_EE',
+       'TRASTORNO_DEL_APRENDIZAJE_(VV-NN-EE)']
+        df = df[orden]
+
+       
+
+
+        # Getting HTML needed to render the plot.
+        plot_div = plot({'data': graphs, 'layout': layout}, 
+                        output_type='div')
+        greeting = {}
+        greeting['title'] = "Epilepsia"
+        greeting['pageview'] = "Dashboard"
+        greeting["plot_div"] = plot_div
+        greeting["observaciones"] = str(observaciones)
+        greeting["trastorno_c"] = len(df[df["TRASTORNO_DEL_APRENDIZAJE_(VV-NN-EE)"]=="SI"].index)
+        greeting["rr"] = len(df[df["ALTERACIÓN_RR"]=="SI"].index)
+        greeting["vv"] = len(df[df["ALTERACIÓN_VV"]=="SI"].index)
+        greeting["nn"] = len(df[df["ALTERACIÓN_NN"]=="SI"].index)
+        greeting["ee"] = len(df[df["ALTERACION_EE"]=="SI"].index)
+        greeting["edad"] = epi_edad(df)
+        greeting["cor"] = get_epicorr(df)
+        greeting["trastorno"] = epi_trastorno(df)
+        greeting["clinica_raz"] = get_clinicaraz(df)
+        greeting["clinica_tras"] = epi_clinicatras(df)
+        replace = '<table border="1" class="dataframe">'
+        greeting["tabla"] =  df.to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
+        return render(request, 'menu/index_epilepsia.html',context=greeting)
+
+
+
+
+def epi_edad(df):
+    data = df.groupby("EDAD")["EDAD"].count()
+    labels = data.keys()
+    graphs = px.pie(data, values="EDAD",names=labels)
+    graphs.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    graphs.update_layout(  font=dict(
+                size=18,
+                
+            ))
+    layout = {
+            'title': 'Edad de pacientes',
+            'xaxis_title': 'Edad',
+            'yaxis_title': 'Cantidad',
+        }
+    return plot({'data': graphs, 'layout': layout}, 
+                        output_type='div')
+
+def epi_trastorno(df):
+    data = df.groupby("TRASTORNO_DEL_APRENDIZAJE_(VV-NN-EE)")["TRASTORNO_DEL_APRENDIZAJE_(VV-NN-EE)"].count()
+    labels = data.keys()
+    graphs = px.pie(data, values="TRASTORNO_DEL_APRENDIZAJE_(VV-NN-EE)",names=labels)
+    graphs.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    graphs.update_layout(  font=dict(
+                size=18,
+                
+            ))
+    layout = {
+            'title': 'Trastorno del aprendizaje',
+            'xaxis_title': 'Trastorno',
+            'yaxis_title': 'Cantidad',
+        }
+    return plot({'data': graphs, 'layout': layout}, 
+                        output_type='div')
+
+def get_epicorr(df):
+    
+    cor = nominal.compute_associations(df)
+
+    graphs = px.imshow(cor,x=cor.columns,
+    y=cor.columns, color_continuous_scale=px.colors.sequential.Inferno)
+    
+    
+    
+
+    # Setting layout of the figure.
+    layout = {
+        'title': 'Correlacion de variables',
+    
+        
+    }
+
+    # Getting HTML needed to render the plot.
+    return( plot({'data': graphs, 'layout': layout}, 
+                    output_type='div'))
+
+
+
+def epi_clinicatras(df):
+    fig = px.histogram(df, x="CLINICA", color="TRASTORNO_DEL_APRENDIZAJE_(VV-NN-EE)")
+    fig.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    fig.update_layout(  font=dict(
+            size=18,
+            
+        ))
+    
+    
+    
+
+    # Setting layout of the figure.
+    layout = {
+        'title': 'Correlacion de variables',
+    
+        
+    }
+
+    # Getting HTML needed to render the plot.
+    return( plot({'data': fig, 'layout': layout}, 
+                    output_type='div'))
+
+
+def get_clinicaraz(df):
+    
+    fig = px.histogram(df, x="CLINICA", color="RAZONAMIENTO_LÓGICO_RR.1")
+    fig.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    fig.update_layout(  font=dict(
+            size=18,
+            
+        ))
+    
+    
+    
+
+    # Setting layout of the figure.
+    layout = {
+        'title': 'Correlacion de variables',
+    
+        
+    }
+
+    # Getting HTML needed to render the plot.
+    return( plot({'data': fig, 'layout': layout}, 
+                    output_type='div'))
+
+
+
+
 # Trasplante renal
 class TrasplanteView(LoginRequiredMixin,View):
     def get(self, request):
@@ -46,7 +223,7 @@ class TrasplanteView(LoginRequiredMixin,View):
             'yaxis_title': 'Cantidad',
         }
 
-        inputs = df.reset_index().iloc[: , 1:14].drop("AÑO_",axis=1)
+        inputs = df.reset_index().iloc[: , 2:14].drop("AÑO_",axis=1)
         outputs = df.reset_index().iloc[: , 14:]
 
 
