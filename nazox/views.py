@@ -12,9 +12,12 @@ import plotly.figure_factory as ff
 from dython import nominal
 from sklearn.svm import SVR
 import numpy as np
-
-
-
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from django.urls import reverse
+import logging
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 # Epilepsia
 class EpilepsiaView(LoginRequiredMixin,View):
@@ -24,8 +27,8 @@ class EpilepsiaView(LoginRequiredMixin,View):
         
         con = sqlite3.connect(settings.DATABASES['default']['NAME'])
 
-        df = pd.read_sql_query("SELECT * from epilepsia", con)
-
+        df = pd.read_sql_query("SELECT * from epilepsia", con,index_col="INDEX")
+        
         observaciones = len(df.index) 
 
         data = df.groupby("SEXO")["SEXO"].count()
@@ -47,15 +50,7 @@ class EpilepsiaView(LoginRequiredMixin,View):
         }
 
 
-        orden = ['CLINICA', 'EDAD', 'SEXO', 'TIPO_DE_EPILEPSIA', 'TIPO',
-       'FARMACOS__1', 'FARMACO_2', 'RAZONAMIENTO_LÓGICO_RR',
-       'RAZONAMIENTO_LÓGICO_RR.1', 'ALTERACIÓN_RR', 'FACTOR_VERBAL__VV',
-       'FACTOR_VERBAL__VV.1', 'ALTERACIÓN_VV', 'FACTOR_NUMÉRICO_NN',
-       'FACTOR_NUMÉRICO_NN.1', 'ALTERACIÓN_NN', 'FACTOR_VISOESPACIAL_EE',
-       'FACTOR_VISOESPACIAL_EE.1', 'ALTERACION_EE',
-       'TRASTORNO_DEL_APRENDIZAJE_(VV-NN-EE)']
-        df = df[orden]
-
+        
        
 
 
@@ -77,9 +72,14 @@ class EpilepsiaView(LoginRequiredMixin,View):
         greeting["trastorno"] = epi_trastorno(df)
         greeting["clinica_raz"] = get_clinicaraz(df)
         greeting["clinica_tras"] = epi_clinicatras(df)
+        greeting["alteracionee"] = get_alteracion(df,"ALTERACION_EE")
+        greeting["alteracionnn"] = get_alteracion(df,"ALTERACIÓN_NN")
+        greeting["alteracionvv"] = get_alteracion(df,"ALTERACIÓN_VV")
+        greeting["tipoall"] = get_tipoall(df)
         greeting["reg"] = epi_regression(df)
         replace = '<table border="1" class="dataframe">'
-        greeting["tabla"] =  df.to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
+        greeting["tabla"] =  df.to_html(classes=None, border=None, justify=None,index=False).replace(replace,"").replace("</table>","")
+        
         return render(request, 'menu/index_epilepsia.html',context=greeting)
 
 
@@ -188,6 +188,50 @@ def get_clinicaraz(df):
     return( plot({'data': fig, 'layout': layout}, 
                     output_type='div'))
 
+
+def get_tipoall(df):
+    
+    fig = px.histogram(df, x="TIPO", color="TRASTORNO_DEL_APRENDIZAJE_(VV-NN-EE)",orientation="v")
+    fig.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    fig.update_layout(  font=dict(
+            size=18,
+            
+        ))
+
+    # Setting layout of the figure.
+    layout = {
+        'title': 'TIPO caracterizado por TRASTORNO_DEL_APRENDIZAJE_(VV-NN-EE) ',
+    
+        
+    }
+
+    # Getting HTML needed to render the plot.
+    return( plot({'data': fig, 'layout': layout}, 
+                    output_type='div'))
+
+
+def get_alteracion(df,alteracion):
+    
+    fig = px.histogram(df, x="TIPO", color=f"{alteracion}",orientation="v")
+    fig.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    fig.update_layout(  font=dict(
+            size=18,
+            
+        ))
+
+    # Setting layout of the figure.
+    layout = {
+        'title': f'TIPO caracterizado por {alteracion}',
+    
+        
+    }
+
+    # Getting HTML needed to render the plot.
+    return( plot({'data': fig, 'layout': layout}, 
+                    output_type='div'))
+
+
+
 def epi_regression(df):
     
 
@@ -196,7 +240,7 @@ def epi_regression(df):
     fig.update_traces(marker=dict(size=5))
     
     layout = {
-        'title': 'Predicción',
+        'title': 'Diagrama 3D de pruebas',
     
         
     }
@@ -224,14 +268,12 @@ class TrasplanteView(LoginRequiredMixin,View):
         # Adding bar plot of y3 vs x.
         graphs.append(
               go.Bar(
-            x=["Hombres","Mujeres"],
-        y=df['SEXO'].value_counts(),
-            text=[1,2],
-            textposition='auto',
-        )
+            x=["MUJERES","HOMBRES"],
+            y=df['SEXO'].value_counts(sort=False),
+            textposition='auto'))
             
-        )
-
+       
+        
         # Setting layout of the figure.
         layout = {
             'title': 'Sexo de pacientes',
@@ -239,8 +281,8 @@ class TrasplanteView(LoginRequiredMixin,View):
             'yaxis_title': 'Cantidad',
         }
 
-        inputs = df.reset_index().iloc[: , 2:14].drop("AÑO_",axis=1)
-        outputs = df.reset_index().iloc[: , 14:]
+        inputs = df.reset_index().iloc[: , 2:15].drop("AÑO_",axis=1)
+        outputs = df.reset_index().iloc[: , 15:]
 
 
         # Getting HTML needed to render the plot.
@@ -268,6 +310,7 @@ class TrasplanteView(LoginRequiredMixin,View):
         greeting["corr2"] = get_corr(outputs)
         greeting["etiologia_funcion"] = get_etilogia_funcion(df)
         greeting["io"] = get_iocorr(df,inputs,outputs)
+        greeting["pca"] = pca(inputs,df["FUNCIÓN_RENAL_ALTERADA_A_5_AÑOS_"])
         replace = '<table border="1" class="dataframe">'
         greeting["tabla"] =  df.to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
         print(observaciones)
@@ -282,7 +325,7 @@ def get_edad(df):
 
     # Adding bar plot of y3 vs x.
     
-    graph = ff.create_distplot([df["EDAD"].values], ["EDAD DE PACIENTES EN MESES"],  show_rug=False)
+    graph = px.box(df, y="EDAD", points="all")
     
 
     # Setting layout of the figure.
@@ -305,7 +348,7 @@ def get_etiologia(df):
     graphs.append(
             go.Bar(
         x=["CAKUT","NO CAKUT"],
-    y=df['ETIOLOGÍA'].value_counts(),
+    y=df['ETIOLOGÍA'].value_counts(sort=False),
         text=["CAKUT","NO CAKUT"],
         textposition='auto',
     )
@@ -335,7 +378,7 @@ def get_funcion(df):
      
 
 
-    graph=px.bar(df, x=["No Alterada","Alterada"], y=df["FUNCIÓN_RENAL_ALTERADA_A_5_AÑOS_"].value_counts(), title="Función renal alterada a 5 años")
+    graph=px.bar(df, x=["No Alterada","Alterada"], y=df["FUNCIÓN_RENAL_ALTERADA_A_5_AÑOS_"].value_counts(sort=False), title="Función renal alterada a 5 años")
 
 
        
@@ -356,6 +399,11 @@ def get_cakut(df):
     
 
     graphs = px.histogram(df, x='CLASIFICACIÓN_DE_CAKUT', color="SEXO", barmode='group')
+    graphs.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    graphs.update_layout(  font=dict(
+                size=18,
+                
+            ))
 
     # Setting layout of the figure.
     layout = {
@@ -374,6 +422,11 @@ def get_nocakut(df):
     
 
     graphs = px.histogram(df, x='CLASIFICACIÓN_NO_CAKUT', color="SEXO", barmode='group')
+    graphs.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    graphs.update_layout(  font=dict(
+                size=18,
+                
+            ))
 
     # Setting layout of the figure.
     layout = {
@@ -391,6 +444,11 @@ def get_linear(df):
     
 
     graphs =  px.scatter(df, x="EDAD", y="CREATININA_SÉRICA_AL_1ER__AÑO", trendline="ols",)
+    graphs.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    graphs.update_layout(  font=dict(
+                size=18,
+                
+            ))
 
     # Setting layout of the figure.
     layout = {
@@ -409,6 +467,11 @@ def get_dialisis(df):
     
 
     graphs = px.histogram(df, x='TIPO_DE_DIALISIS',y="TIEMPO_DE_DIÁLISIS", color="SUPERVIVENCIA_DE_PACIEE_A_5_AÑOS", barmode='group')
+    graphs.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    graphs.update_layout(  font=dict(
+                size=18,
+                
+            ))
 
     # Setting layout of the figure.
     layout = {
@@ -427,6 +490,11 @@ def get_muerte_sexo(df):
     
 
     graphs = px.histogram(df, x='SUPERVIVENCIA_DE_PACIEE_A_5_AÑOS', color="SEXO", barmode='group')
+    graphs.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    graphs.update_layout(  font=dict(
+                size=18,
+                
+            ))
 
     # Setting layout of the figure.
     layout = {
@@ -444,6 +512,11 @@ def get_etilogia_funcion(df):
     
 
     graphs = px.histogram(df, x='ETIOLOGÍA', color="FUNCIÓN_RENAL_ALTERADA_A_5_AÑOS_", barmode='group')
+    graphs.update_traces( marker=dict( line=dict(color='#000000', width=3)))
+    graphs.update_layout(  font=dict(
+                size=18,
+                
+            ))
 
     # Setting layout of the figure.
     layout = {
@@ -461,24 +534,16 @@ def get_corr(df):
     
     corr = df.corr()
 
-    graphs = go.Heatmap(
-    z=corr,
-    x=corr.columns,
-    y=corr.columns,
-    colorscale=px.colors.diverging.RdBu,
-    zmin=-1,
-    zmax=1
-)
+    graphs = px.imshow(corr,x=corr.columns,
+    y=corr.columns, color_continuous_scale=px.colors.sequential.Inferno)
+    
 
 
     
 
     # Setting layout of the figure.
     layout = {
-        'title': 'Relación etiología y función renal alterada a 5 años',
-        'xaxis_title': 'Etiología',
-        'yaxis_title': 'Conteo',
-        
+        'title': 'Matriz de correlación',
         
     }
 
@@ -490,24 +555,18 @@ def get_corr(df):
 
 def get_iocorr(df,input,output):
     
-    corr = nominal.compute_associations(df,num_num_assoc="spearman")
-
-    graphs = go.Heatmap(
-    z=corr,
-    x=input.columns,
-    y=output.columns,
-    colorscale=px.colors.diverging.RdBu,
-
-)
+    cor = nominal.compute_associations(df,num_num_assoc="spearman")
+    
+    graphs = px.imshow(cor,x=df.columns,y=df.columns, color_continuous_scale=px.colors.sequential.Inferno)
+    
 
 
     
 
     # Setting layout of the figure.
     layout = {
-        'title': 'Relación etiología y función renal alterada a 5 años',
-        'xaxis_title': 'Etiología',
-        'yaxis_title': 'Conteo',
+        'title': 'Correlaciones',
+    
         
         
     }
@@ -517,7 +576,27 @@ def get_iocorr(df,input,output):
                     output_type='div'))
 
 
+def pca(input,output):
+    sc=StandardScaler()
+    pca = PCA(n_components=3)
+    components = pca.fit_transform(sc.fit_transform(input))
 
+    total_var = pca.explained_variance_ratio_.sum() * 100
+
+    fig = px.scatter_3d(
+        components, x=0, y=1, z=2, color=output,
+        title=f'Varianza Total Explicada: {total_var:.2f}%',
+        labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'},
+        height=1000
+    )
+    layout = {
+        'title': 'Primeras 3 componentes y caracterización por Malfunción renal',
+    
+        
+    }
+    # Getting HTML needed to render the plot.
+    return( plot({'data': fig, 'layout': layout}, 
+                    output_type='div'))
 
 # Dashboard
 class DashboardView(LoginRequiredMixin,View):
@@ -529,14 +608,86 @@ class DashboardView(LoginRequiredMixin,View):
         return render(request, 'menu/index.html',greeting)
 
 
+from django import forms
+def UploadView(request):
+        data = {}
+        con = sqlite3.connect(settings.DATABASES['default']['NAME'])
 
-class UploadView(LoginRequiredMixin,View):
-    def get(self, request):
-        print(request.session)
-        greeting = {}
-        greeting['title'] = "Actualizar"
-        greeting['pageview'] = "Transplante Renal"        
-        return render(request, 'menu/upload.html',greeting)
+        df = pd.read_sql_query("SELECT * from renal", con,index_col="INDEX")
+        if "GET" == request.method:
+            return render(request, "menu/upload.html", data)
+        # if not GET, then proceed
+        try:
+            csv_file = request.FILES["csv_file"]
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request,'El archivo seleccionado no es de tipo CSV')
+                return HttpResponseRedirect(reverse("update"))
+            #if file is too large, return
+            if csv_file.multiple_chunks():
+                messages.error(request,"El archivo es muy grande(%.2f MB)." % (csv_file.size/(1000*1000),))
+                return HttpResponseRedirect(reverse("update"))
+
+            db = pd.read_csv(csv_file,index_col="INDEX")
+            if (db.columns.values != df.columns.values).all():
+                logging.getLogger("error_logger").error(forms.errors.as_json())
+                messages.error(request,'El archivo no tiene el formato correcto')
+            else:
+                db.dropna().to_sql('renal_input', con, if_exists ='replace')
+                cur = con.cursor()
+                cur.execute("INSERT or IGNORE INTO renal SELECT * FROM renal_input")
+                con.commit()
+                messages.info(request,'El archivo se ha subido correctamente')
+                
+
+            
+
+        except Exception as e:
+            logging.getLogger("error_logger").error("No se pudo abrir el archivo: "+repr(e))
+            messages.error(request,"No se pudo abrir el archivo: "+repr(e))
+
+        return HttpResponseRedirect(reverse("update"))
+
+
+
+def UploadViewE(request):
+        data = {}
+        con = sqlite3.connect(settings.DATABASES['default']['NAME'])
+
+        df = pd.read_sql_query("SELECT * from epilepsia", con,index_col="INDEX")
+        if "GET" == request.method:
+            return render(request, "menu/uploade.html", data)
+        # if not GET, then proceed
+        try:
+            csv_file = request.FILES["csv_file"]
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request,'El archivo seleccionado no es de tipo CSV')
+                return HttpResponseRedirect(reverse("update"))
+            #if file is too large, return
+            if csv_file.multiple_chunks():
+                messages.error(request,"El archivo es muy grande(%.2f MB)." % (csv_file.size/(1000*1000),))
+                return HttpResponseRedirect(reverse("update"))
+
+            db = pd.read_csv(csv_file,index_col="INDEX")
+            if (db.columns.values != df.columns.values).all():
+                logging.getLogger("error_logger").error(forms.errors.as_json())
+                messages.error(request,'El archivo no tiene el formato correcto')
+            else:
+                db.dropna().to_sql('epilepsia_input', con, if_exists ='replace')
+                cur = con.cursor()
+                cur.execute("INSERT or IGNORE INTO epilepsia SELECT * FROM renal_input")
+                con.commit()
+                messages.info(request,'El archivo se ha subido correctamente')
+                
+
+            
+
+        except Exception as e:
+            logging.getLogger("error_logger").error("No se pudo abrir el archivo: "+repr(e))
+            messages.error(request,"No se pudo abrir el archivo: "+repr(e))
+
+        return HttpResponseRedirect(reverse("update"))
+
+
 
 
 # Calender
@@ -546,6 +697,13 @@ class EdaView(LoginRequiredMixin,View):
         greeting['title'] = "Análisis Exploratiorio"
         greeting['pageview'] = "Transplante Renal"        
         return render(request, 'menu/eda.html',greeting)
+
+class EdaViewEpi(LoginRequiredMixin,View):
+    def get(self, request):
+        greeting = {}
+        greeting['title'] = "Análisis Exploratiorio"
+        greeting['pageview'] = "Transplante Epilepsia"        
+        return render(request, 'menu/eda_epi.html',greeting)
 
 
 # Calender

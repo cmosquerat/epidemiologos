@@ -6,17 +6,17 @@
 					<!-- LOGO -->
 					<div class="navbar-brand-box">
 						<a href="{% url 'trasplante' %}" class="logo logo-dark"> <span class="logo-sm">
-                                    <img src="{% static 'images/logo-sm-dark.png' %}" alt="logo-sm-dark" height="22">
+                                    <img src="{% static 'images/logo-sm-dark.png' %}" alt="logo-sm-dark" height="35">
                                 </span>
 							<span class="logo-lg">
-                                    <img src="{% static 'images/logo-dark.png' %}" alt="logo-dark" height="20">
+                                    <img src="{% static 'images/logo-dark.png' %}" alt="logo-dark" height="35">
                                 </span>
 						</a>
 						<a href="{% url 'trasplante' %}" class="logo logo-light"> <span class="logo-sm">
-                                    <img src="{% static 'images/logo-sm-light.png' %}" alt="logo-sm-light" height="22">
+                                    <img src="{% static 'images/logo-sm-light.png' %}" alt="logo-sm-light" height="35">
                                 </span>
 							<span class="logo-lg">
-                                    <img src="{% static 'images/logo-light.png' %}" alt="logo-light" height="20">
+                                    <img src="{% static 'images/logo-light.png' %}" alt="logo-light" height="35">
                                 </span>
 						</a>
 					</div>
@@ -320,25 +320,7 @@
 							<!-- </div> -->
 						<!-- </div> -->
 					<!-- </div> -->
-					<div class="dropdown d-inline-block user-dropdown">
-						<button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<img class="rounded-circle header-profile-user" src="{% static 'images/users/avatar-2.jpg' %}" alt="Header Avatar"> <span class="d-none d-xl-inline-block ms-1">{{user.username}}</span>
-							<i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-						</button>
-						<div class="dropdown-menu dropdown-menu-end">
-							<!-- item--> <a class="dropdown-item" href="#"><i class="ri-user-line align-middle me-1"></i> Profile</a>
-							<a class="dropdown-item" href="#" key="t-my-wallet" ><i class="ri-wallet-2-line align-middle me-1"></i> My Wallet</a>
-							<a class="dropdown-item d-block" href="#" key="t-t-settings"><span class="badge bg-success float-end mt-1">11</span><i class="ri-settings-2-line align-middle me-1"></i> Settings</a>
-							<a class="dropdown-item" href="{% url 'auth-lock-screen' %}"><i class="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a>
-							<div class="dropdown-divider"></div>
-							{% if user.is_authenticated %}
-                                <a class="dropdown-item" href="{% url 'change_password' %}"><i class="mdi mdi-lock text-muted font-size-16 align-middle me-1"></i> <span class="align-middle" key="t-lock-screen">Change password</span></a>
-                                <a class="dropdown-item text-danger" href="{% url 'auth-logout' %}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> <span class="align-middle" key="t-logout">Logout</span></a>
-                                {% else %}
-                                <a class="dropdown-item"  href="{% url 'auth-login' %}"><i class="mdi mdi-login-variant text-muted font-size-16 align-middle me-1"></i> <span class="align-middle" key="t-login">Login</span></a>
-                                {% endif %}
-						</div>
-					</div>
+					
 					<div class="dropdown d-inline-block">
 						<button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect"> <i class="ri-settings-2-line"></i>
 						</button>

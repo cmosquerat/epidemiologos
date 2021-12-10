@@ -211,10 +211,11 @@
 						<div class="card-body">
 
 							<h4 class="card-title">Matriz de correlaciones de variables de salida</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
+							<p class="card-title-desc">El objetivo de este paso es comprender cómo las variables del 
+								conjunto de datos de entrada varían de la media entre sí, o en otras palabras,
+								 para ver si existe alguna relación entre ellas. Porque a veces, las variables 
+								 están altamente correlacionadas de tal manera que contienen información redundante. 
+								 Entonces, para identificar estas correlaciones, calculamos la matriz de covarianza.
 							</p>
 
 							{% autoescape off %}
@@ -234,10 +235,8 @@
 						<div class="card-body">
 
 							<h4 class="card-title">Diagrama de barras entre CLINICA y Trastorno</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
+							<p class="card-title-desc"> Tras el análisis exploratorio, se descubrió que es mucho más probable que un paciente
+								con epilepsia tenga algún tipo de trastorno de aprendizaje. Se muestra este comportamiento para el conjunto de datos
 							</p>
 
 							{% autoescape off %}
@@ -257,14 +256,34 @@
 						<div class="card-body">
 
 							<h4 class="card-title">Diagrama de barras entre CLINICA y Razonamiento Lógico</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
+							<p class="card-title-desc">
+				
 							</p>
 
 							{% autoescape off %}
 							{{clinica_raz}}
+							{% endautoescape %}
+
+						</div>
+					</div>
+				</div> <!-- end col -->
+			</div> <!-- end row -->
+		</div>
+
+
+		<div class="row">
+			<div class="row ">
+				<div class="col-12">
+					<div class="card ">
+						<div class="card-body">
+
+							<h4 class="card-title">Diagrama de barras de TIPO caracterizado por Trastorno VV EE NN</h4>
+							<p class="card-title-desc">Se muestra el diagrama de barras para la clases de TIPO y la caracterización de trastorno general. 
+
+							</p>
+
+							{% autoescape off %}
+							{{tipoall}}
 							{% endautoescape %}
 
 						</div>
@@ -279,11 +298,76 @@
 					<div class="card ">
 						<div class="card-body">
 
-							<h4 class="card-title">Diagrama de barras entre CLINICA y Razonamiento Lógico</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
+							<h4 class="card-title">Diagrama de barras de TIPO caracterizado por Trastorno NN</h4>
+							<p class="card-title-desc">Se muestra el diagrama de barras para la clases de TIPO y la caracterización de trastorno NN. 
+
+							</p>
+
+							{% autoescape off %}
+							{{alteracionnn}}
+							{% endautoescape %}
+
+						</div>
+					</div>
+				</div> <!-- end col -->
+			</div> <!-- end row -->
+		</div>
+
+		<div class="row">
+			<div class="row ">
+				<div class="col-12">
+					<div class="card ">
+						<div class="card-body">
+
+							<h4 class="card-title">Diagrama de barras de TIPO caracterizado por Trastorno EE</h4>
+							<p class="card-title-desc">Se muestra el diagrama de barras para la clases de TIPO y la caracterización de trastorno EE. 
+
+							</p>
+
+							{% autoescape off %}
+							{{alteracionee}}
+							{% endautoescape %}
+
+						</div>
+					</div>
+				</div> <!-- end col -->
+			</div> <!-- end row -->
+		</div>
+
+		<div class="row">
+			<div class="row ">
+				<div class="col-12">
+					<div class="card ">
+						<div class="card-body">
+
+							<h4 class="card-title">Diagrama de barras de TIPO caracterizado por Trastorno VV</h4>
+							<p class="card-title-desc">Se muestra el diagrama de barras para la clases de TIPO y la caracterización de trastorno VV. 
+
+							</p>
+
+							{% autoescape off %}
+							{{alteracionvv}}
+							{% endautoescape %}
+
+						</div>
+					</div>
+				</div> <!-- end col -->
+			</div> <!-- end row -->
+		</div>
+
+
+
+
+		<div class="row">
+			<div class="row ">
+				<div class="col-12">
+					<div class="card ">
+						<div class="card-body">
+
+							<h4 class="card-title">Diagrama de puntos para pruebas de NN EE VV</h4>
+							<p class="card-title-desc">En el conjunto de datos original, se evidenció una alta correlación entre el puntaje de las prueba, es decir, 
+								si un paciente tuvo un puntaje alto en alguna de las pruebas, lo más probalbe es que en las demás también tenga puntajes altos. 
+
 							</p>
 
 							{% autoescape off %}

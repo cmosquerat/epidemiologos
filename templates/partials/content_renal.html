@@ -225,11 +225,6 @@
 						<div class="card-body">
 
 							<h4 class="card-title">Matriz de correlaciones de variables de salida</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
-							</p>
 
 							{% autoescape off %}
 							{{corr2}}
@@ -248,12 +243,7 @@
 					<div class="card">
 						<div class="card-body">
 
-							<h4 class="card-title">Matriz de correlaciones de variables de salida vs entrada</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
-							</p>
+							<h4 class="card-title">Matriz de correlaciones de todas las variables</h4>
 
 							{% autoescape off %}
 							{{io}}
@@ -275,10 +265,7 @@
 						<div class="card-body">
 
 							<h4 class="card-title">Relación entre edad y creatinina primer año</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
+							<p class="card-title-desc">En el desarollo del análsiis exploratorio se halló una relación de tipo directa entre Creatinina y EDAD
 							</p>
 
 							{% autoescape off %}
@@ -300,10 +287,7 @@
 
 							<h4 class="card-title">Diagrama de barras por diálisis y supervivencia del paciente a 5 años
 							</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
+							<p class="card-title-desc">En el conjunto de datos original, todos los pacientes que fallecieron tuvieron el mismo tipo de diálisis
 							</p>
 
 							{% autoescape off %}
@@ -324,10 +308,7 @@
 						<div class="card-body">
 
 							<h4 class="card-title">Diagramas de barras por sexo y supervivencia del paciente</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
+							<p class="card-title-desc">En el conjunto de datos original, todos los pacientes que fallecieron fueron mujeres.
 							</p>
 
 							{% autoescape off %}
@@ -348,10 +329,7 @@
 						<div class="card-body">
 
 							<h4 class="card-title">Diagrama de barras por etiología y función renal alterada</h4>
-							<p class="card-title-desc">The Buttons extension for DataTables
-								provides a common set of options, API methods and styling to display
-								buttons on a page that will interact with a DataTable. The core library
-								provides the based framework upon which plug-ins can built.
+							<p class="card-title-desc">Los pacientes que tuvieron etiología No CAKUT tuvieron en promedio más veces función renal alterada. 
 							</p>
 
 							{% autoescape off %}
@@ -364,6 +342,27 @@
 			</div> <!-- end row -->
 		</div>
 
+		<div class="row">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-body">
+
+							<h4 class="card-title">Primeras 3 componentes PCA y caracterización por función renal alterada</h4>
+							<p class="card-title-desc">En el análisis exploratorio se evidenció que originalmente el conjunto
+								 necesita muchas componentes para ser expresado, y no se encontraron clústers para la caracterización por función renal,
+								 sin embargo, este comportamiento puede variar según se aumente la cantidad de datos.
+							</p>
+
+							{% autoescape off %}
+							{{pca}}
+							{% endautoescape %}
+
+						</div>
+					</div>
+				</div> <!-- end col -->
+			</div> <!-- end row -->
+		</div>
 
 	</div>
 	<!-- end row -->

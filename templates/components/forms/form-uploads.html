@@ -6,38 +6,20 @@
 {% endblock extra_css %}
 
 {% block content %}                        
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-body">
-        
-                                        <h4 class="card-title">Dropzone</h4>
-                                        <p class="card-title-desc">DropzoneJS is an open source library
-                                            that provides drag’n’drop file uploads with image previews.
-                                        </p>
-        
-                                        <div>
-                                            <form action="#" class="dropzone">
-                                                <div class="fallback">
-                                                    <input name="file" type="file" multiple="multiple">
-                                                </div>
-                                                <div class="dz-message needsclick">
-                                                    <div class="mb-3">
-                                                        <i class="display-4 text-muted ri-upload-cloud-2-line"></i>
-                                                    </div>
-                                                    
-                                                    <h4>Drop files here or click to upload.</h4>
-                                                </div>
-                                            </form>
-                                        </div>
-        
-                                        <div class="text-center mt-4">
-                                            <button type="button" class="btn btn-primary waves-effect waves-light">Send Files</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> <!-- end col -->
-                        </div> <!-- end row -->
+<form action="{% url "myapp:upload_csv" %}" method="POST" enctype="multipart/form-data" class="form-horizontal"> 
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name" class="col-md-3 col-sm-3 col-xs-12 control-label">File: </label>
+        <div class="col-md-8">
+            <input type="file" name="csv_file" id="csv_file" required="True" class="form-control">
+        </div>                    
+    </div>
+    <div class="form-group">                    
+        <div class="col-md-3 col-sm-3 col-xs-12 col-md-offset-3" style="margin-bottom:10px;">
+             <button class="btn btn-primary"> <span class="glyphicon glyphicon-upload" style="margin-right:5px;"></span>Upload </button>
+        </div> 
+    </div>
+    </form>
 {% endblock content %}	
 
 {% block extra_javascript %}

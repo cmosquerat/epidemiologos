@@ -23,12 +23,12 @@ urlpatterns = [
     
     path('',views.TrasplanteView.as_view(),name='trasplante'),# Trasplante   
     path('menu/eda',views.EdaView.as_view(),name='eda'),# Trasplante  
-    path('menu/upload',views.UploadView.as_view(),name='update'),# Trasplante  
+    path('menu/upload',views.UploadView,name='update'),# Trasplante  
     path('menu/',views.DashboardView.as_view(),name='dashboard'),# Dashboard
 
-    path('epilepsia',views.EpilepsiaView.as_view(),name='epilepsia'),# Trasplante   
-    path('eda_epilepsia',views.EdaView.as_view(),name='eda_e'),# Trasplante  
-    path('eda_upload',views.UploadView.as_view(),name='update_e'),# Trasplante  
+    path('epi/epilepsia',views.EpilepsiaView.as_view(),name='epilepsia'),# Trasplante   
+    path('epi/eda_epilepsia',views.EdaViewEpi.as_view(),name='eda_epilepsia'),# Trasplante  
+    path('epi/eda_upload',views.UploadViewE,name='update_e'),# Trasplante  
 
     path('menu/calendar',views.CalendarView.as_view(),name='calendar'),# Calender
     path('menu/chat',views.ChatView.as_view(),name='chat'),# Chat
