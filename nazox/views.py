@@ -10,7 +10,8 @@ from django.conf import settings
 import plotly.express as px
 import plotly.figure_factory as ff
 from dython import nominal
-
+from sklearn.svm import SVR
+import numpy as np
 
 
 
@@ -76,6 +77,7 @@ class EpilepsiaView(LoginRequiredMixin,View):
         greeting["trastorno"] = epi_trastorno(df)
         greeting["clinica_raz"] = get_clinicaraz(df)
         greeting["clinica_tras"] = epi_clinicatras(df)
+        greeting["reg"] = epi_regression(df)
         replace = '<table border="1" class="dataframe">'
         greeting["tabla"] =  df.to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
         return render(request, 'menu/index_epilepsia.html',context=greeting)
@@ -186,7 +188,21 @@ def get_clinicaraz(df):
     return( plot({'data': fig, 'layout': layout}, 
                     output_type='div'))
 
+def epi_regression(df):
+    
 
+    # Generate the plot
+    fig = px.scatter_3d(df, x='FACTOR_VERBAL__VV', y='FACTOR_NUMÉRICO_NN', z='FACTOR_VISOESPACIAL_EE',height=1000)
+    fig.update_traces(marker=dict(size=5))
+    
+    layout = {
+        'title': 'Predicción',
+    
+        
+    }
+    # Getting HTML needed to render the plot.
+    return( plot({'data': fig, 'layout': layout}, 
+                    output_type='div'))
 
 
 # Trasplante renal
