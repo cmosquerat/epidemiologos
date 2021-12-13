@@ -78,7 +78,7 @@ class EpilepsiaView(LoginRequiredMixin,View):
         greeting["tipoall"] = get_tipoall(df)
         greeting["reg"] = epi_regression(df)
         replace = '<table border="1" class="dataframe">'
-        greeting["tabla"] =  df.to_html(classes=None, border=None, justify=None,index=False).replace(replace,"").replace("</table>","")
+        greeting["tabla"] =  df.round(decimals=2).to_html(classes=None, border=None, justify=None,index=False).replace(replace,"").replace("</table>","")
         
         return render(request, 'menu/index_epilepsia.html',context=greeting)
 
@@ -312,7 +312,7 @@ class TrasplanteView(LoginRequiredMixin,View):
         greeting["io"] = get_iocorr(df,inputs,outputs)
         greeting["pca"] = pca(inputs,df["FUNCIÓN_RENAL_ALTERADA_A_5_AÑOS_"])
         replace = '<table border="1" class="dataframe">'
-        greeting["tabla"] =  df.to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
+        greeting["tabla"] =  df.round(decimals=2).to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
         
 
         return render(request, 'menu/index_renal.html',context=greeting)
