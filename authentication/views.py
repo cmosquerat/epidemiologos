@@ -38,7 +38,7 @@ class LoginView(View):
                     request.session.set_expiry(300)
                     LoginView.username.append(username)
                     data={}
-                    data['success_message'] ='Ingreso correcto'
+                    data['success_message'] ='Ingreso correcto, por favor espere.'
                     return JsonResponse(data,safe=False)
                 else:
                     data={}

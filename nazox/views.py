@@ -124,7 +124,7 @@ def get_epicorr(df):
     cor = nominal.compute_associations(df)
 
     graphs = px.imshow(cor,x=cor.columns,
-    y=cor.columns, color_continuous_scale=px.colors.sequential.Inferno)
+    y=cor.columns, color_continuous_scale=px.colors.sequential.Inferno,height=1000)
     
     
     
@@ -313,7 +313,8 @@ class TrasplanteView(LoginRequiredMixin,View):
         greeting["pca"] = pca(inputs,df["FUNCIÓN_RENAL_ALTERADA_A_5_AÑOS_"])
         replace = '<table border="1" class="dataframe">'
         greeting["tabla"] =  df.to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
-        print(observaciones)
+        
+
         return render(request, 'menu/index_renal.html',context=greeting)
 
 
@@ -533,9 +534,10 @@ def get_etilogia_funcion(df):
 def get_corr(df):
     
     corr = df.corr()
+    
 
-    graphs = px.imshow(corr,x=corr.columns,
-    y=corr.columns, color_continuous_scale=px.colors.sequential.Inferno)
+    graphs = px.imshow(corr,x=df.columns,
+    y=df.columns, color_continuous_scale=px.colors.sequential.Inferno,height=1000)
     
 
 
@@ -557,7 +559,7 @@ def get_iocorr(df,input,output):
     
     cor = nominal.compute_associations(df,num_num_assoc="spearman")
     
-    graphs = px.imshow(cor,x=df.columns,y=df.columns, color_continuous_scale=px.colors.sequential.Inferno)
+    graphs = px.imshow(cor,x=df.columns,y=df.columns, color_continuous_scale=px.colors.sequential.Inferno,height=1000)
     
 
 
@@ -697,6 +699,14 @@ class EdaView(LoginRequiredMixin,View):
         greeting['title'] = "Análisis Exploratiorio"
         greeting['pageview'] = "Transplante Renal"        
         return render(request, 'menu/eda.html',greeting)
+
+
+class Manual(LoginRequiredMixin,View):
+    def get(self, request):
+        greeting = {}
+        greeting['title'] = "Manual de usuario"
+        greeting['pageview'] = "Epidemiólogos"        
+        return render(request, 'menu/pages-faqs.html',greeting)
 
 class EdaViewEpi(LoginRequiredMixin,View):
     def get(self, request):

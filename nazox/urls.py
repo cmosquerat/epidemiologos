@@ -30,6 +30,8 @@ urlpatterns = [
     path('epi/eda_epilepsia',views.EdaViewEpi.as_view(),name='eda_epilepsia'),# Trasplante  
     path('epi/eda_upload',views.UploadViewE,name='update_e'),# Trasplante  
 
+    path('manual',views.Manual.as_view(),name='manual'),# Trasplante  
+
     path('menu/calendar',views.CalendarView.as_view(),name='calendar'),# Calender
     path('menu/chat',views.ChatView.as_view(),name='chat'),# Chat
     path('menu/app-kanban-board',views.KanbanBoardView.as_view(),name='app-kanban-board'),# Kanban Board
