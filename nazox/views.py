@@ -18,7 +18,16 @@ from django.urls import reverse
 import logging
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-
+from sklearn.preprocessing import StandardScaler
+from django.urls import reverse
+import logging
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+import pickle
+import catboost as cb
+from sklearn.preprocessing import StandardScaler
+import category_encoders as ce
+import catboost as cb
 # Epilepsia
 class EpilepsiaView(LoginRequiredMixin,View):
     def get(self, request):
@@ -251,71 +260,57 @@ def epi_regression(df):
 
 # Trasplante renal
 class TrasplanteView(LoginRequiredMixin,View):
-    def get(self, request):
+    def get(self,request):
+        data = {}
+        data["title"] = "Predicción"
+        data["pageview"] = "Aluminio"
 
-        print(request.session)
-        
-        con = sqlite3.connect(settings.DATABASES['default']['NAME'])
+        data["result"] = None
 
-        df = pd.read_sql_query("SELECT * from renal", con)
-
-        observaciones = len(df.index) 
-
-        # List of graph objects for figure.
-        # Each object will contain on series of data.
-        graphs = []
-
-        # Adding bar plot of y3 vs x.
-        graphs.append(
-              go.Bar(
-            x=["MUJERES","HOMBRES"],
-            y=df['SEXO'].value_counts(sort=False),
-            textposition='auto'))
+        if "GET" == request.method:
+            return render(request, "menu/index_renal.html", data)
+        # if not GET, then proceed
+    def post(self,request):
+            model = pickle.load(open("./static/predict/model_al.pkl", "rb"))
+            sc = pickle.load(open("./static/predict/sc_al.pkl", "rb"))
             
-       
-        
-        # Setting layout of the figure.
-        layout = {
-            'title': 'Sexo de pacientes',
-            'xaxis_title': 'Sexo',
-            'yaxis_title': 'Cantidad',
-        }
+            data = {}
+            data["title"] = "Predicción"
+            data["pageview"] = "Aluminio"
+           
+            try:
+                xlsx_file = request.FILES["xlsx_file"]
+                if not xlsx_file.name.endswith(".xlsx"):
+                    messages.error(request, "El archivo seleccionado no es de tipo xlsx.")
+                    return HttpResponseRedirect(reverse("trasplante"))
+                # if file is too large, return
+                if xlsx_file.multiple_chunks():
+                    messages.error(
+                        request,
+                        "El archivo es muy grande(%.2f MB)." % (xlsx_file.size / (1000 * 1000),),
+                    )
+                    return HttpResponseRedirect(reverse("trasplante"))
 
-        inputs = df.reset_index().iloc[: , 2:15].drop("AÑO_",axis=1)
-        outputs = df.reset_index().iloc[: , 15:]
+                db = pd.read_excel(xlsx_file,sheet_name="Al")  
+                test_df = db[['pH', 'M.O.', 'Al', 'K', 'Ca', 'Mg']]
+                x = test_df[['pH', 'M.O.',  'K', 'Ca', 'Mg']]
 
+                x = sc.transform(x)
+                pred = model.predict(x)
+                db["Aluminio Predicho"] = pred
+                replace = '<table border="1" class="dataframe">'
+                data["result"] = db.reset_index(drop=True).round(decimals=2).to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
+                """ 
+                data["error_media"] = error_media(db) """
+                return render(request, "menu/index_renal.html", data)
 
-        # Getting HTML needed to render the plot.
-        plot_div = plot({'data': graphs, 'layout': layout}, 
-                        output_type='div')
-        greeting = {}
-        greeting['title'] = "Trasplante renal"
-        greeting['pageview'] = "Dashboard"
-        greeting["plot_div"] = plot_div
-        greeting["observaciones"] = str(observaciones)
-        greeting["funcion"] = len(df[df["FUNCIÓN_RENAL_ALTERADA_A_5_AÑOS_"]==2].index)
-        greeting["fallecidos"] = len(df[df["SUPERVIVENCIA_DE_PACIEE_A_5_AÑOS"]==2].index)
-        greeting["no_fallecidos"] = len(df[df["SUPERVIVENCIA_DE_PACIEE_A_5_AÑOS"]==1].index)
-        greeting["Cakut"] = len(df[df["ETIOLOGÍA"]==1].index)
-        greeting["No_Cakut"] = len(df[df["ETIOLOGÍA"]==2].index)
-        greeting["plot_etiologia"] = get_etiologia(df)
-        greeting["plot_edad"] = get_edad(df)
-        greeting["plot_funcion"] = get_funcion(df)
-        greeting["plot_cakut"] = get_cakut(df)
-        greeting["plot_nocakut"] = get_nocakut(df)
-        greeting["dialisis"] = get_dialisis(df)
-        greeting["linear"] = get_linear(df)
-        greeting["muerte"] = get_muerte_sexo(df)
-        greeting["corr1"] = get_corr(inputs)
-        greeting["corr2"] = get_corr(outputs)
-        greeting["etiologia_funcion"] = get_etilogia_funcion(df)
-        greeting["io"] = get_iocorr(df,inputs,outputs)
-        greeting["pca"] = pca(inputs,df["FUNCIÓN_RENAL_ALTERADA_A_5_AÑOS_"])
-        replace = '<table border="1" class="dataframe">'
-        greeting["tabla"] =  df.round(decimals=2).to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
-        
+            except Exception as e:
+                logging.getLogger("error_logger").error(
+                    "No se pudo abrir el archivo: " + repr(e)
+                )
+                messages.error(request, "No se pudo abrir el archivo: " + repr(e))
 
-        return render(request, 'menu/index_renal.html',context=greeting)
+            return HttpResponseRedirect(reverse("trasplante"))
 
 
 
@@ -327,7 +322,7 @@ def get_edad(df):
     # Adding bar plot of y3 vs x.
     
     graph = px.box(df, y="EDAD", points="all")
-    
+    graph.update
 
     # Setting layout of the figure.
     layout = {
@@ -694,11 +689,57 @@ def UploadViewE(request):
 
 # Calender
 class EdaView(LoginRequiredMixin,View):
-    def get(self, request):
-        greeting = {}
-        greeting['title'] = "Análisis Exploratiorio"
-        greeting['pageview'] = "Transplante Renal"        
-        return render(request, 'menu/eda.html',greeting)
+     def get(self,request):
+        data = {}
+        data["title"] = "Predicción"
+        data["pageview"] = "Aluminio"
+
+        data["result"] = None
+
+        if "GET" == request.method:
+            return render(request, "menu/eda.html", data)
+        # if not GET, then proceed
+     def post(self,request):
+            model = pickle.load(open("./static/predict/model_cic.pkl", "rb"))
+            sc = pickle.load(open("./static/predict/sc_cic.pkl", "rb"))
+            
+            data = {}
+            data["title"] = "Predicción"
+            data["pageview"] = "CIC"
+           
+            try:
+                xlsx_file = request.FILES["xlsx_file"]
+                if not xlsx_file.name.endswith(".xlsx"):
+                    messages.error(request, "El archivo seleccionado no es de tipo xlsx.")
+                    return HttpResponseRedirect(reverse("eda"))
+                # if file is too large, return
+                if xlsx_file.multiple_chunks():
+                    messages.error(
+                        request,
+                        "El archivo es muy grande(%.2f MB)." % (xlsx_file.size / (1000 * 1000),),
+                    )
+                    return HttpResponseRedirect(reverse("eda"))
+
+                db = pd.read_excel(xlsx_file,sheet_name="CIC")  
+                test_df = db[['pH', 'M.O.', 'CIC', 'K', 'Ca', 'Mg']]
+                x = test_df[['pH', 'M.O.',  'K', 'Ca', 'Mg']]
+
+                x = sc.transform(x)
+                pred = model.predict(x)
+                db["CIC Predicho"] = pred
+                replace = '<table border="1" class="dataframe">'
+                data["result"] = db.reset_index(drop=True).round(decimals=2).to_html(classes=None, border=None, justify=None).replace(replace,"").replace("</table>","")
+                """ 
+                data["error_media"] = error_media(db) """
+                return render(request, "menu/eda.html", data)
+
+            except Exception as e:
+                logging.getLogger("error_logger").error(
+                    "No se pudo abrir el archivo: " + repr(e)
+                )
+                messages.error(request, "No se pudo abrir el archivo: " + repr(e))
+
+            return HttpResponseRedirect(reverse("eda"))
 
 
 class Manual(LoginRequiredMixin,View):

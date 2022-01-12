@@ -1,66 +1,195 @@
-{% extends 'partials/base.html' %}
-{% load static %}
-{% block extra_css %}
-<!-- jquery.vectormap css -->
-<link href="{% static 'libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css' %}" rel="stylesheet"
-    type="text/css" />
+{% extends 'partials/base.html' %} {% load static %} {% block extra_css %}
+
 <!-- DataTables -->
-<link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
-    type="text/css" />
+<link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'libs/datatables.net-select-bs4/css//select.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
 <!-- Responsive datatable examples -->
-<link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet"
-    type="text/css" />
+<link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
 
-    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'libs/datatables.net-select-bs4/css//select.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+<!-- Plugins css -->
+<link href="{% static 'libs/dropzone/min/dropzone.min.css' %}" rel="stylesheet" type="text/css" /> {% endblock extra_css %} {% block content %}
 
-    <!-- Responsive datatable examples -->
-    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />        
-{% endblock extra_css %}
+<div class="row">
 
-{% block content %}
-{% include "partials/content_renal.html" %}
-{% endblock content %}
-{% block extra_javascript %}
-<!-- apexcharts -->
-<script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
+    <div class="col-sm">
+        <div class="card">
+            <div class="card-body">
 
-<!-- jquery.vectormap map -->
-<script src="{% static 'libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js' %}"></script>
-<script src="{% static 'libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js' %}"></script>
+                <h4 class="card-title">Predicción para el valor de aluminio</h4>
 
+
+                {% for message in messages %}
+                <div class="alert {{ message.tags }} mb-4" role="alert">
+                    <strong>{{ message }}</strong>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+<div class="row">
+
+    <div class="col-sm">
+
+        <div class="card bg-warning text-white-50">
+            <div class="card-body">
+
+
+                <h5 class="mb-4 text-white"><i class="mdi mdi-alert-circle-outline me-3"></i>Información Importante</h5>
+                <p class="card-text">Para que el modelo predictor funcione bien, es muy importante que los datos de entrada contengan las mismas columnas y el formato de variables correcto. Puedes descargar la plantilla para el llenado de datos en el siguiente botón:
+
+                </p>
+                <form method="get" action="{% static 'predict/plantilla.xlsx' %}">
+                    <button class="btn" type="submit"><i class="fa fa-download"></i> Descargar plantilla</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title">Predicción por carga masiva</h4>
+                <p class="card-title-desc"> Una vez modificada la tabla de plantilla, puede predecir nuevos datos subiendo en el siguiente formulario el archivo CSV correspondiente
+                </p>
+
+
+                <form action="{% url 'trasplante' %}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name" class="col-md-3">File: </label>
+                        <div class="col-md-8">
+                            <input type="file" name="xlsx_file" id="xlsx_file" required="True" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-3" style="margin-bottom:10px;">
+                            <button class="btn btn-primary"> <span class="glyphicon glyphicon-upload"
+                        style="margin-right:5px;"></span>  Predecir </button>
+                        </div>
+                    </div>
+
+
+                </form>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% for message in messages %}
+<div class="alert {{ message.tags }} mb-4" role="alert">
+    <strong>{{ message }}</strong>
+</div>
+{% endfor %} {% if result %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title">Resultado de la predicción</h4>
+                <p class="card-title-desc"> A continuación, se muestran los resultados sobre el conjunto subido. Puede descargarlo en formato CSV, PDF o excel.
+                </p>
+
+                <table id="datatable-buttons" class="table table-striped table-bordered" style=" width: 100%;">
+                    {% autoescape off %} {{result}} {% endautoescape %}
+                </table>
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+{% endif %} {% for graph in graficas %}
+<div class="row">
+    <div class="row ">
+        <div class="col-12">
+            <div class="card ">
+                <div class="card-body">
+
+
+                    {% autoescape off %} {{graph}} {% endautoescape %}
+
+                </div>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+{% endfor %}
+
+
+<div class="row">
+    <div class="row ">
+        <div class="col-12">
+            <div class="card ">
+                <div class="card-body">
+
+
+                    {% autoescape off %} {{error_media}} {% endautoescape %}
+
+                </div>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+
+
+
+</div>
+
+
+
+
+<!-- end row -->
+{% endblock content %} {% block extra_javascript %}
 <!-- Required datatable js -->
 <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<!-- Buttons examples -->
+<script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'libs/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+
+<script src="{% static 'libs/datatables.net-keytable/js/dataTables.keyTable.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-select/js/dataTables.select.min.js' %}"></script>
 
 <!-- Responsive examples -->
 <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
 <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
 
-<script src="{% static 'js/pages/dashboard.init.js' %}"></script>
-
-  <!-- Required datatable js -->
-  <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
-  <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
-  <!-- Buttons examples -->
-  <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
-  <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
-  <script src="{% static 'libs/jszip/jszip.min.js' %}"></script>
-  <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
-  <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
-  <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
-  <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
-  <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
-
-  <script src="{% static 'libs/datatables.net-keytable/js/dataTables.keyTable.min.js' %}"></script>
-  <script src="{% static 'libs/datatables.net-select/js/dataTables.select.min.js' %}"></script>
-  
-  <!-- Responsive examples -->
-  <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
-  <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
-
-  <!-- Datatable init js -->
-  <script src="{% static 'js/pages/datatables.init.js' %}"></script>
-
+<!-- Datatable init js -->
+<script src="{% static 'js/pages/datatables.init.js' %}"></script>
 {% endblock extra_javascript %}

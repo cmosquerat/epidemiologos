@@ -1,69 +1,29 @@
-{% load static %}
-{% block sidebar %}
+{% load static %} {% block sidebar %}
 <!-- ========== Left Sidebar Start ========== -->
 <div class="vertical-menu">
-	<div data-simplebar class="h-100">
-		<!--- Sidemenu -->
-		<div id="sidebar-menu">
-			<!-- Left Menu Start -->
-			<ul class="metismenu list-unstyled" id="side-menu">
-				<li class="menu-title" key="t-menu">TRANSPLANTE RENAL</li>
-				<li>
-					<a href="{% url 'trasplante' %}" class="waves-effect"> <i class="ri-dashboard-line"></i>
-						<!-- <span class="badge rounded-pill bg-success float-end">3</span> -->
-						<span key="t-trasplante">Dashboard</span>
-					</a>
-				</li>
+    <div data-simplebar class="h-100">
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">
+                <li class="menu-title" key="t-menu">TRANSPLANTE RENAL</li>
+                <li>
+                    <a href="{% url 'trasplante' %}" class="waves-effect"> <i class="ri-dashboard-line"></i>
+                        <!-- <span class="badge rounded-pill bg-success float-end">3</span> -->
+                        <span key="t-trasplante">Predicción CIC</span>
+                    </a>
+                </li>
 
-				<li>
-					<a href="{% url 'eda' %}" class="waves-effect"> 
-						<!-- <span class="badge rounded-pill bg-success float-end">3</span> --><i class="ri-layout-3-line"></i>
-						<span key="t-eda">Análisis Exploratorio</span>
-					</a>
-				</li>
+                <li>
+                    <a href="{% url 'eda' %}" class="waves-effect">
+                        <!-- <span class="badge rounded-pill bg-success float-end">3</span> --><i class="ri-layout-3-line"></i>
+                        <span key="t-eda">Predicción Aluminio</span>
+                    </a>
+                </li>
 
-				<li>
-					<a href="{% url 'update' %}" class="waves-effect"> <i class="ri-pencil-ruler-2-line"></i>
-						<!-- <span class="badge rounded-pill bg-success float-end">3</span> -->
-						<span key="t-update">Actualizar información</span>
-					</a>
-				</li>
-
-
-				
-					<li class="menu-title" key="t-menu">EPILEPSIA</li>
-					<li>
-						<a href="{% url 'epilepsia' %}" class="wave-effect"> <i class="ri-dashboard-line"></i> 
-							<!-- <span class="badge rounded-pill bg-success float-end">3</span> -->
-							<span key="t-trasplantee">Dashboard</span>
-						</a>
-					</li>
-	
-					<li>
-						<a href="{% url 'eda_epilepsia' %}" class="wave-effect"> 
-							<!-- <span class="badge rounded-pill bg-success float-end">3</span> --><i class="ri-layout-3-line"></i>
-							<span key="t-edae">Análisis Exploratorio</span>
-						</a>
-					</li>
-	
-					<li>
-						<a href="{% url 'update_e' %}" class="wave-effect"> <i class="ri-pencil-ruler-2-line"></i>
-							<!-- <span class="badge rounded-pill bg-success float-end">3</span> -->
-							<span key="t-updatee">Actualizar información</span>
-						</a>
-					</li>
-
-					<li class="menu-title" key="t-menu">Manual de usuario</li>
-					<li>
-						<a href="{% url 'manual' %}" class="wave-effect"> <i class="ri-dashboard-line"></i> 
-							<!-- <span class="badge rounded-pill bg-success float-end">3</span> -->
-							<span key="t-trasplantee">Manual</span>
-						</a>
-					</li>
-
-		</div>
-		<!-- Sidebar -->
-	</div>
+        </div>
+        <!-- Sidebar -->
+    </div>
 </div>
 <!-- Left Sidebar End -->
 {% endblock sidebar %}
