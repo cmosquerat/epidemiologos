@@ -5,9 +5,9 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Two Step Verification | Dashboard Multilab Agroanalítica CONSULTORES S.A.S</title>
+    <title>Two Step Verification | Dashboard Multilab Agroanalítica </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Dashboard para Multilab Agroanalítica CONSULTORES S.A.S desarrollado por BIOS" name="description" />
+    <meta content="Dashboard para Multilab Agroanalítica  desarrollado por MULTILAB" name="description" />
     <meta content="Themesdesign" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
@@ -34,10 +34,8 @@
                                         <div class="text-center">
                                             <div>
                                                 <a href="{% url 'dashboard' %}" class="">
-                                                    <img src="{% static 'images/logo-dark.png' %}" alt="" height="20"
-                                                        class="auth-logo logo-dark mx-auto">
-                                                    <img src="{% static 'images/logo-light.png' %}" alt="" height="20"
-                                                        class="auth-logo logo-light mx-auto">
+                                                    <img src="{% static 'images/logo-dark.png' %}" alt="" height="20" class="auth-logo logo-dark mx-auto">
+                                                    <img src="{% static 'images/logo-light.png' %}" alt="" height="20" class="auth-logo logo-light mx-auto">
                                                 </a>
                                             </div>
 
@@ -63,53 +61,36 @@
                                                             <div class="row">
                                                                 <div class="col-3">
                                                                     <div class="mb-3">
-                                                                        <label for="digit1-input"
-                                                                            class="visually-hidden">Dight 1</label>
-                                                                        <input type="text"
-                                                                            class="form-control form-control-lg text-center"
-                                                                            onkeyup="moveToNext(this, 2)" maxlength="1"
-                                                                            id="digit1-input">
+                                                                        <label for="digit1-input" class="visually-hidden">Dight 1</label>
+                                                                        <input type="text" class="form-control form-control-lg text-center" onkeyup="moveToNext(this, 2)" maxlength="1" id="digit1-input">
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-3">
                                                                     <div class="mb-3">
-                                                                        <label for="digit2-input"
-                                                                            class="visually-hidden">Dight 2</label>
-                                                                        <input type="text"
-                                                                            class="form-control form-control-lg text-center"
-                                                                            onkeyup="moveToNext(this, 3)" maxlength="1"
-                                                                            id="digit2-input">
+                                                                        <label for="digit2-input" class="visually-hidden">Dight 2</label>
+                                                                        <input type="text" class="form-control form-control-lg text-center" onkeyup="moveToNext(this, 3)" maxlength="1" id="digit2-input">
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-3">
                                                                     <div class="mb-3">
-                                                                        <label for="digit3-input"
-                                                                            class="visually-hidden">Dight 3</label>
-                                                                        <input type="text"
-                                                                            class="form-control form-control-lg text-center"
-                                                                            onkeyup="moveToNext(this, 4)" maxlength="1"
-                                                                            id="digit3-input">
+                                                                        <label for="digit3-input" class="visually-hidden">Dight 3</label>
+                                                                        <input type="text" class="form-control form-control-lg text-center" onkeyup="moveToNext(this, 4)" maxlength="1" id="digit3-input">
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-3">
                                                                     <div class="mb-3">
-                                                                        <label for="digit4-input"
-                                                                            class="visually-hidden">Dight 4</label>
-                                                                        <input type="text"
-                                                                            class="form-control form-control-lg text-center"
-                                                                            onkeyup="moveToNext(this, 4)" maxlength="1"
-                                                                            id="digit4-input">
+                                                                        <label for="digit4-input" class="visually-hidden">Dight 4</label>
+                                                                        <input type="text" class="form-control form-control-lg text-center" onkeyup="moveToNext(this, 4)" maxlength="1" id="digit4-input">
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </form>
 
                                                         <div class="mt-4">
-                                                            <a href="{% url 'dashboard' %}"
-                                                                class="btn btn-success w-md">Confirm</a>
+                                                            <a href="{% url 'dashboard' %}" class="btn btn-success w-md">Confirm</a>
                                                         </div>
                                                     </div>
 
@@ -119,7 +100,9 @@
 
                                         <div class="mt-5 text-center">
                                             <p>©
-                                                <script>document.write(new Date().getFullYear())</script> Multilab Agroanalítica CONSULTORES S.A.S
+                                                <script>
+                                                    document.write(new Date().getFullYear())
+                                                </script> Multilab Agroanalítica
                                             </p>
                                         </div>
                                     </div>

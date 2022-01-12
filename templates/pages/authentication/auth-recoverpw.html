@@ -1,14 +1,13 @@
-{% load static %}
-{% load crispy_forms_tags %}
+{% load static %} {% load crispy_forms_tags %}
 <!doctype html>
 <html lang="en">
 
 <head>
 
     <meta charset="utf-8" />
-    <title>Recover Password | Dashboard Multilab Agroanalítica CONSULTORES S.A.S</title>
+    <title>Recover Password | Dashboard Multilab Agroanalítica </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Dashboard para Multilab Agroanalítica CONSULTORES S.A.S desarrollado por BIOS" name="description" />
+    <meta content="Dashboard para Multilab Agroanalítica  desarrollado por MULTILAB" name="description" />
     <meta content="Themesdesign" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
@@ -35,37 +34,31 @@
                                         <div class="text-center">
                                             <div>
                                                 <a href="{% url 'dashboard' %}" class="">
-                                                    <img src="{% static 'images/logo-dark.png' %}" alt="" height="20"
-                                                        class="auth-logo logo-dark mx-auto">
-                                                    <img src="{% static 'images/logo-light.png' %}" alt="" height="20"
-                                                        class="auth-logo logo-light mx-auto">
+                                                    <img src="{% static 'images/logo-dark.png' %}" alt="" height="20" class="auth-logo logo-dark mx-auto">
+                                                    <img src="{% static 'images/logo-light.png' %}" alt="" height="20" class="auth-logo logo-light mx-auto">
                                                 </a>
                                             </div>
 
                                             <h4 class="font-size-18 mt-4">Cambio de contraseña</h4>
-                                            <p class="text-muted">Cambio de contraseña para el Dashboard Multilab Agroanalítica CONSULTORES S.A.S</p>
+                                            <p class="text-muted">Cambio de contraseña para el Dashboard Multilab Agroanalítica </p>
                                         </div>
 
                                         <div class="p-2 mt-5">
                                             <div class="alert alert-success mb-4" role="alert">
-                                                Ingresa tu correo electrónico para recibir las instrucciones para el
-                                                cambio de contraseña
+                                                Ingresa tu correo electrónico para recibir las instrucciones para el cambio de contraseña
                                             </div>
                                             <form action="" method="POST" enctype="multipart/form-data">
-                                                {% csrf_token %}
-                                                {% for message in messages %}
+                                                {% csrf_token %} {% for message in messages %}
                                                 <div class="alert {{ message.tags }} mb-4" role="alert">
                                                     <strong>{{ message }}</strong>
                                                 </div>
                                                 {% endfor %}
                                                 <div class="auth-form-group-custom mb-4">
-                                                    <i class="ri-mail-line auti-custom-input-icon"></i>
-                                                    {{form.email|as_crispy_field}}
+                                                    <i class="ri-mail-line auti-custom-input-icon"></i> {{form.email|as_crispy_field}}
                                                 </div>
 
                                                 <div class="mt-4 text-center">
-                                                    <button class="btn btn-primary w-md waves-effect waves-light"
-                                                        type="submit">Cambiar</button>
+                                                    <button class="btn btn-primary w-md waves-effect waves-light" type="submit">Cambiar</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -74,7 +67,9 @@
                                             <p>???? <a href="{% url 'auth-login'%}" class="fw-medium text-primary">
                                                     Ingresar </a> </p>
                                             <p>©
-                                                <script>document.write(new Date().getFullYear())</script> Multilab Agroanalítica CONSULTORES S.A.S
+                                                <script>
+                                                    document.write(new Date().getFullYear())
+                                                </script> Multilab Agroanalítica
                                             </p>
                                         </div>
                                     </div>
