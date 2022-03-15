@@ -231,7 +231,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
         valor = round(relaciones[key], 2)
         if valor != None:
             valor = float(valor)
-            text = key.upper() + " : " + str(valor)
+            text = key + " : " + str(valor)
             for i in range(0, 5, 1):
                 if i == 0:
                     if is_between(0, valor, value[i]):
