@@ -109,10 +109,10 @@ def get_database():
     year = date.strftime("%Y")
     años = [year]
     años = [2021]
-    mydb = connection.connect(host="localhost",
+    mydb = connection.connect(host="190.147.28.95",
                               database='multilab',
                               user="root",
-                              passwd="admin")
+                              passwd="d3f4g5h6")
     for año in años:
         query = f"Select * from muestra_{año};"
         muestras = pd.read_sql(query, mydb)
