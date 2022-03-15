@@ -25,7 +25,7 @@ urlpatterns = [
     path('menu/eda',views.EdaView.as_view(),name='eda'),# Trasplante  
     path('menu/upload',views.UploadView,name='update'),# Trasplante  
     path('menu/',views.DashboardView.as_view(),name='dashboard'),# Dashboard
-
+    path('menu/reportes',views.Reportes.as_view(),name='reportes'),# Trasplante   
     path('epi/epilepsia',views.EpilepsiaView.as_view(),name='epilepsia'),# Trasplante   
     path('epi/eda_epilepsia',views.EdaViewEpi.as_view(),name='eda_epilepsia'),# Trasplante  
     path('epi/eda_upload',views.UploadViewE,name='update_e'),# Trasplante  

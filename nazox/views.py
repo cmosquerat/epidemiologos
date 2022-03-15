@@ -28,6 +28,10 @@ import catboost as cb
 from sklearn.preprocessing import StandardScaler
 import category_encoders as ce
 import catboost as cb
+from nazox.pdf import *
+import io
+from django.http import FileResponse
+
 # Epilepsia
 class EpilepsiaView(LoginRequiredMixin,View):
     def get(self, request):
@@ -90,6 +94,9 @@ class EpilepsiaView(LoginRequiredMixin,View):
         greeting["tabla"] =  df.round(decimals=2).to_html(classes=None, border=None, justify=None,index=False).replace(replace,"").replace("</table>","")
         
         return render(request, 'menu/index_epilepsia.html',context=greeting)
+
+
+
 
 
 
@@ -258,6 +265,36 @@ def epi_regression(df):
                     output_type='div'))
 
 
+class Reportes(LoginRequiredMixin,View):
+    def get(self,request):
+        data = {}
+        data["title"] = "Predicción"
+        data["pageview"] = "Aluminio"
+
+        data["result"] = None
+
+        if "GET" == request.method:
+            return render(request, "menu/reportes.html", data)
+    
+    def post(self,request):
+        c_orden = request.POST.get('reportes')
+        data = {}
+        data["title"] = "Reportes"
+        data["pageview"] = "Interpretación"
+        c_orden = int(c_orden)
+        if not isinstance(c_orden, int):
+            messages.error(
+                        request,
+                        "Ingrese un número válido de orden",
+                    )
+            return HttpResponseRedirect(reverse("reportes"))
+        else:
+            output,finca = get_muestras(c_orden)
+            str_corden = str(c_orden)
+            return FileResponse(output, as_attachment=True, filename=f'{finca}_{str_corden}.pdf')
+
+
+
 # Trasplante renal
 class TrasplanteView(LoginRequiredMixin,View):
     def get(self,request):
@@ -269,6 +306,7 @@ class TrasplanteView(LoginRequiredMixin,View):
 
         if "GET" == request.method:
             return render(request, "menu/index_renal.html", data)
+
         # if not GET, then proceed
     def post(self,request):
             model = pickle.load(open("./static/predict/model_al.pkl", "rb"))
