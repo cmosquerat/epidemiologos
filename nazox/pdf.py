@@ -182,7 +182,7 @@ def get_description(c_lab, muestras, ordenes, cliente, municipios, finca,
     codigo_municipio = finca[finca["codigo"] ==
                              codigo_finca]["municipio"].values[0]
     analisis = tipo_analisis[tipo_analisis["codigo"] == orden["clase_analisis"]
-                             .values[0]]["nombre"].values[0]
+                             .values[0]]["descripcion"].values[0]
     municipio = municipios[municipios["codigo_municipio"] ==
                            codigo_municipio]["nombre"].values[0]
     diccionario1 = {
@@ -425,7 +425,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
     #### Titulo
     can.setFont("Header", 20)
     can.setFillColor(HexColor(0x454785))
-    text = f"Reportes Suelos {analisis}"
+    text = f"Reporte {analisis}"
     text_width = stringWidth(text, "Titulo", 14)
     can.drawString(22, 695, text)
     #### Información
