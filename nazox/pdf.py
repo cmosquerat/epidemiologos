@@ -130,7 +130,7 @@ def get_database():
     date = currentDateTime.date()
     year = date.strftime("%Y")
     años = [year]
-    años = [2021]
+    #años = [2021]
     mydb = connection.connect(host="190.147.28.95",
                               database='multilab',
                               user="root",
@@ -210,9 +210,10 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
     diccionario1, diccionario2, analisis = get_description(
         c_lab, muestras, ordenes, cliente, municipios, finca, tipo_analisis)
     rangos = []
+    muestras = muestras[muestras["codigo"] == c_lab]
     blue = (0.27, 0.27, 0.52, 1)
     for key, value in rangos_elementos.items():
-        valor = muestras.iloc[c_lab][key]
+        valor = muestras[key].values[0]
         if valor != None:
             valor = float(valor.replace(",", "."))
             text = map_elementos[key] + " : " + str(valor)
@@ -239,15 +240,15 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
     rangos = []
 
     relaciones = dict()
-    relaciones["Ca/Mg"] = float(muestras.iloc[c_lab]["ca"].replace(
-        ",", ".")) / float(muestras.iloc[c_lab]["mg"].replace(",", "."))
-    relaciones["Ca/K"] = float(muestras.iloc[c_lab]["ca"].replace(
-        ",", ".")) / float(muestras.iloc[c_lab]["k"].replace(",", "."))
-    relaciones["Mg/K"] = float(muestras.iloc[c_lab]["mg"].replace(
-        ",", ".")) / float(muestras.iloc[c_lab]["k"].replace(",", "."))
-    relaciones["Ca + Mg/K"] = (float(muestras.iloc[c_lab]["ca"].replace(
-        ",", ".")) + float(muestras.iloc[c_lab]["mg"].replace(
-            ",", "."))) / float(muestras.iloc[c_lab]["k"].replace(",", "."))
+    relaciones["Ca/Mg"] = float(muestras["ca"].values[0].replace(
+        ",", ".")) / float(muestras["mg"].values[0].replace(",", "."))
+    relaciones["Ca/K"] = float(muestras["ca"].values[0].replace(
+        ",", ".")) / float(muestras["k"].values[0].replace(",", "."))
+    relaciones["Mg/K"] = float(muestras["mg"].values[0].replace(
+        ",", ".")) / float(muestras["k"].values[0].replace(",", "."))
+    relaciones["Ca + Mg/K"] = (float(muestras["ca"].values[0].replace(
+        ",", ".")) + float(muestras["mg"].values[0].replace(
+            ",", "."))) / float(muestras["k"].values[0].replace(",", "."))
 
     for key, value in rangos_relaciones.items():
         valor = round(relaciones[key], 2)
@@ -281,9 +282,9 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
         temp_list = a = [x for x in llaves if x != key]
         sum = 0
         for value in temp_list:
-            sum += float(muestras.iloc[c_lab][value].replace(",", "."))
+            sum += float(muestras[value].values[0].replace(",", "."))
         saturaciones[key] = round(
-            float(muestras.iloc[c_lab][key].replace(",", ".")) / sum, 2)
+            float(muestras[key].values[0].replace(",", ".")) / sum, 2)
 
     for key, value in rangos_saturaciones.items():
         valor = round(saturaciones[key], 2)
