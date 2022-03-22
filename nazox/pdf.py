@@ -29,6 +29,28 @@ from svglib.svglib import svg2rlg
 import matplotlib.colors as colors
 from reportlab.lib.colors import HexColor
 
+map_elementos = {
+    'ph': "pH",
+    'n': "N",
+    'mo': "MO",
+    'k': "K",
+    'ca': "Ca",
+    'mg': "Mg",
+    'na': "Na",
+    'al': "Al",
+    'cic': "CIC",
+    'p': "P",
+    'fe': "Fe",
+    'mn': "Mn",
+    'zn': "Zn",
+    'cu': "CU",
+    's': "S",
+    'b': "B",
+    'ar': "Ar",
+    'l': "L",
+    'a': "A"
+}
+
 rangos_elementos = {
     'ph': [4.5, 5, 5.5, 6],
     'n': [0.2, 0.3, 0.4, 0.5],
@@ -108,7 +130,7 @@ def get_database():
     date = currentDateTime.date()
     year = date.strftime("%Y")
     años = [year]
-    #años = [2021]
+    años = [2021]
     mydb = connection.connect(host="190.147.28.95",
                               database='multilab',
                               user="root",
@@ -193,7 +215,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
         valor = muestras.iloc[c_lab][key]
         if valor != None:
             valor = float(valor.replace(",", "."))
-            text = key + " : " + str(valor)
+            text = map_elementos[key] + " : " + str(valor)
             for i in range(0, 5, 1):
                 if i == 0:
                     if is_between(0, valor, value[i]):
@@ -267,7 +289,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
         valor = round(saturaciones[key], 2)
         if valor != None:
             valor = float(valor)
-            text = key + " : " + str(valor)
+            text = map_elementos[key] + " : " + str(valor)
             for i in range(0, 5, 1):
                 if i == 0:
                     if is_between(0, valor, value[i]):
@@ -304,6 +326,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
                    aspect='auto',
                    cmap=cmap,
                    alpha=0.7)
+
         plot = sns.scatterplot(data=df,
                                y="Elemento",
                                x="Rango",
