@@ -108,7 +108,7 @@ def get_database():
     date = currentDateTime.date()
     year = date.strftime("%Y")
     años = [year]
-    años = [2021]
+    #años = [2021]
     mydb = connection.connect(host="190.147.28.95",
                               database='multilab',
                               user="root",
@@ -164,8 +164,8 @@ def get_description(c_lab, muestras, ordenes, cliente, municipios, finca,
     municipio = municipios[municipios["codigo_municipio"] ==
                            codigo_municipio]["nombre"].values[0]
     diccionario1 = {
-        "Solicitante:": solicitante.encode('utf-8'),
-        "Propietario:": propietario.encode('utf-8'),
+        "Solicitante:": solicitante,
+        "Propietario:": propietario,
         "Proyecto:": proyecto,
         "Finca:": nombre_finca,
         "Vereda:": vereda,
@@ -193,7 +193,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
         valor = muestras.iloc[c_lab][key]
         if valor != None:
             valor = float(valor.replace(",", "."))
-            text = key.upper() + " : " + str(valor)
+            text = key + " : " + str(valor)
             for i in range(0, 5, 1):
                 if i == 0:
                     if is_between(0, valor, value[i]):
@@ -267,7 +267,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
         valor = round(saturaciones[key], 2)
         if valor != None:
             valor = float(valor)
-            text = key.upper() + " : " + str(valor)
+            text = key + " : " + str(valor)
             for i in range(0, 5, 1):
                 if i == 0:
                     if is_between(0, valor, value[i]):
@@ -288,14 +288,14 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
 
     cim = plt.imread("degradado.png")
     cim = cim[cim.shape[0] // 2, 8:740, :]
-
+    sns.set(font_scale=2)
     cmap = colors.ListedColormap(cim)
     with plt.rc_context({
             'axes.edgecolor': blue,
             'xtick.color': blue,
             'ytick.color': blue
     }):
-        ############## Imagen 1 #############
+        ############## Imagen 1 ############
         plt.figure(figsize=(12, 12))
         plt.title("INTERPRETACIÓN", weight='bold', color=(0.27, 0.27, 0.52, 1))
         gradient = np.linspace(0, 1, 100).reshape(1, -1)
@@ -309,7 +309,6 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
                                x="Rango",
                                s=300,
                                color="black")
-        sns.set(font_scale=2)
         plot.set_xticks([1, 2, 3, 4, 5])
         plot.set_xticklabels(
             ["BAJO", "MOD. \n BAJO", "MEDIO", "MOD. \n ALTO", "ALTO"])
