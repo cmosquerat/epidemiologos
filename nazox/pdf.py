@@ -73,6 +73,94 @@ rangos_elementos = {
     'a': [30, 40, 50, 60]
 }
 
+rangos_elementos_cafe = {
+    'ph': [4.6, 5, 5.4, 5.8],
+    'n': [0.2, 0.3, 0.4, 0.5],
+    'mo': [4, 7, 10, 13],
+    'k': [0.12, 0.24, 0.36, 0.48],
+    'ca': [1, 3, 5, 9],
+    'mg': [0.3, 0.8, 1.3, 2.3],
+    'na': [0.02, 0.04, 0.06, 0.08],
+    'al': [0.4, 0.8, 1.2, 2],
+    'cic': [15, 19, 23, 27],
+    'p': [3, 6, 12, 24],
+    'fe': [150, 200, 250, 300],
+    'mn': [12, 24, 36, 60],
+    'zn': [1.8, 3.6, 5.4, 7.2],
+    'cu': [1.8, 3.6, 5.4, 7.2],
+    's': [4, 8, 12, 20],
+    'b': [0.15, 0.3, 0.45, 0.6],
+    'ar': [20, 26, 32, 38],
+    'l': [21, 25, 29, 33],
+    'a': [35, 42, 49, 56]
+}
+
+rangos_elementos_citricos = {
+    'ph': [4.6, 5, 5.4, 5.8],
+    'n': [0.2, 0.25, 0.3, 0.35],
+    'mo': [4, 5, 6, 8],
+    'k': [0.2, 0.4, 0.6, 0.8],
+    'ca': [3, 4.5, 6, 7.5],
+    'mg': [0.8, 1.6, 2.4, 4],
+    'na': [0.02, 0.04, 0.06, 0.1],
+    'al': [0.2, 0.5, 0.8, 1.4],
+    'cic': [15, 18, 21, 24],
+    'p': [5, 10, 20, 40],
+    'fe': [200, 250, 300, 400],
+    'mn': [30, 45, 60, 90],
+    'zn': [4, 6, 8, 10],
+    'cu': [4, 6, 8, 10],
+    's': [5, 10, 20, 40],
+    'b': [0.3, 0.4, 0.5, 0.7],
+    'ar': [22, 28, 34, 40],
+    'l': [22, 25, 28, 31],
+    'a': [38, 43, 48, 53]
+}
+
+rangos_elementos_aguacate = {
+    'ph': [5, 5.2, 5.4, 5.6],
+    'n': [0.2, 0.3, 0.4, 0.5],
+    'mo': [6, 8, 10, 14],
+    'k': [0.15, 0.25, 0.35, 0.45],
+    'ca': [1, 2, 3, 5],
+    'mg': [0.3, 0.6, 0.9, 1.5],
+    'na': [0.02, 0.03, 0.04, 0.6],
+    'al': [0.25, 0.5, 0.75, 1],
+    'cic': [18, 22, 26, 30],
+    'p': [2, 6, 10, 18],
+    'fe': [140, 180, 220, 300],
+    'mn': [10, 20, 30, 50],
+    'zn': [3, 5, 7, 9],
+    'cu': [2, 4, 6, 8],
+    's': [4, 8, 12, 20],
+    'b': [0.15, 0.3, 0.45, 0.6],
+    'ar': [16, 21, 26, 31],
+    'l': [24, 27, 30, 33],
+    'a': [43, 48, 53, 58]
+}
+
+rangos_elementos_pasto = {
+    'ph': [5.3, 5.5, 5.7, 5.9],
+    'n': [0.2, 0.3, 0.4, 0.5],
+    'mo': [5, 7, 9, 13],
+    'k': [0.2, 0.3, 0.4, 0.6],
+    'ca': [2, 4, 6, 8],
+    'mg': [0.7, 1.3, 1.9, 3.1],
+    'na': [0.04, 0.06, 0.08, 0.12],
+    'al': [0.25, 0.5, 0.75, 1],
+    'cic': [18, 22, 26, 30],
+    'p': [2, 6, 10, 18],
+    'fe': [140, 180, 220, 300],
+    'mn': [10, 20, 30, 50],
+    'zn': [3, 5, 7, 9],
+    'cu': [2, 4, 6, 8],
+    's': [4, 8, 12, 20],
+    'b': [0.15, 0.3, 0.45, 0.6],
+    'ar': [16, 21, 26, 31],
+    'l': [24, 27, 30, 33],
+    'a': [43, 48, 53, 58]
+}
+
 rangos_relaciones = {
     "Ca/Mg": [2, 3, 4, 5],
     "Ca/K": [4, 8, 16, 32],
@@ -124,7 +212,7 @@ def remap(x, oMin, oMax, nMin, nMax):
     return result
 
 
-def get_database():
+def get_database(orden):
 
     currentDateTime = datetime.datetime.now()
     date = currentDateTime.date()
@@ -136,21 +224,23 @@ def get_database():
                               user="root",
                               passwd="d3f4g5h6")
     for año in años:
-        query = f"Select * from muestra_{año};"
+        query = f"Select * from muestra_{año} WHERE orden={orden};"
+        print("Obteniendo muestras")
         muestras = pd.read_sql(query, mydb)
         query = f"Select * from orden_{año};"
+        print("Obteniendo Órdenes")
         ordenes = pd.read_sql(query, mydb)
-        query = f"Select * from solicitudes_{año};"
-        solicitudes = pd.read_sql(query, mydb)
         query = f"Select * from finca;"
+        print("Obteniendo Fincas")
         finca = pd.read_sql(query, mydb)
         query = f"Select * from cliente;"
+        print("Obteniendo Clientes")
         cliente = pd.read_sql(query, mydb)
         query = f"Select * from municipios;"
+        print("Obteniendo Municipios")
         municipios = pd.read_sql(query, mydb)
-        query = f"Select * from departamentos;"
-        departamentos = pd.read_sql(query, mydb)
         query = f"Select * from tipo_analisis;"
+        print("Obteniendo Analisis")
         tipo_analisis = pd.read_sql(query, mydb)
 
     mydb.close()  #close the connection
@@ -158,7 +248,7 @@ def get_database():
 
 
 def is_between(a, x, b):
-    return min(a, b) < x < max(a, b)
+    return min(a, b) <= x < max(a, b)
 
 
 def get_description(c_lab, muestras, ordenes, cliente, municipios, finca,
@@ -227,11 +317,14 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
                         rangos.append([text, 5, 5])
                 else:
                     if is_between(value[i - 1], valor, value[i]):
-                        rangos.append(
-                            [text,
-                             remap(valor, 0, value[-1], 0, 5), i + 1])
+                        rangos.append([
+                            text,
+                            remap(valor, value[0], value[-1], 0, 5), i + 1
+                        ])
+    print(rangos)
 
     df = pd.DataFrame(rangos, columns=['Elemento', 'Rango', "Puesto"])
+    print(df)
     PAGE_WIDTH = defaultPageSize[0]
     PAGE_HEIGHT = defaultPageSize[1]
 
@@ -266,9 +359,10 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
                         rangos.append([text, 5, 5])
                 else:
                     if is_between(value[i - 1], valor, value[i]):
-                        rangos.append(
-                            [text,
-                             remap(valor, 0, value[-1], 0, 5), i + 1])
+                        rangos.append([
+                            text,
+                            remap(valor, value[0], value[-1], 0, 5), i + 1
+                        ])
 
     relaciones_df = pd.DataFrame(rangos,
                                  columns=['Elemento', 'Rango', "Puesto"])
@@ -302,9 +396,10 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
                         rangos.append([text, 5, 5])
                 else:
                     if is_between(value[i - 1], valor, value[i]):
-                        rangos.append(
-                            [text,
-                             remap(valor, 0, value[-1], 0, 5), i + 1])
+                        rangos.append([
+                            text,
+                            remap(valor, value[0], value[-1], 0, 5), i + 1
+                        ])
 
     saturaciones_df = pd.DataFrame(rangos,
                                    columns=['Elemento', 'Rango', "Puesto"])
@@ -326,7 +421,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
                    extent=[0.5, 5.5, -1, len(set(df.Elemento))],
                    aspect='auto',
                    cmap=cmap,
-                   alpha=0.7)
+                   alpha=0.9)
 
         plot = sns.scatterplot(data=df,
                                y="Elemento",
@@ -360,7 +455,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
                            len(set(relaciones_df.Elemento))],
                    aspect='auto',
                    cmap=cmap,
-                   alpha=0.7)
+                   alpha=0.9)
         plot = sns.scatterplot(data=relaciones_df,
                                y="Elemento",
                                x="Rango",
@@ -393,7 +488,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
                            len(set(saturaciones_df.Elemento))],
                    aspect='auto',
                    cmap=cmap,
-                   alpha=0.7)
+                   alpha=0.9)
         plot = sns.scatterplot(data=saturaciones_df,
                                y="Elemento",
                                x="Rango",
@@ -442,6 +537,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
                        643 - (con * 20), text)
         con += 1
     con = 0
+    diccionario2["Referencia"] = muestras["referencia"].values[0]
     for key, value in diccionario2.items():
         can.setFont("Header", 10)
         text = str(key)
@@ -473,7 +569,7 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
 
 def get_muestras(c_orden):
     muestras, ordenes, cliente, municipios, finca, tipo_analisis = get_database(
-    )
+        c_orden)
     buffer = io.BytesIO()
     muestras_t = muestras[muestras["orden"] == c_orden]
     output = PdfFileWriter()
