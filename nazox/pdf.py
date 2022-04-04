@@ -247,8 +247,12 @@ def get_database(orden):
     return muestras, ordenes, cliente, municipios, finca, tipo_analisis
 
 
-def is_between(a, x, b):
+def is_between_min(a, x, b):
+    return min(a, b) < x <= max(a, b)
+
+def is_between_max(a,x,b):
     return min(a, b) <= x < max(a, b)
+
 
 
 def get_description(c_lab, muestras, ordenes, cliente, municipios, finca,
@@ -309,14 +313,14 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
             text = map_elementos[key] + " : " + str(valor)
             for i in range(0, 5, 1):
                 if i == 0:
-                    if is_between(0, valor, value[i]):
+                    if is_between_max(0, valor, value[i]):
                         rangos.append([text, 1, 1])
                 if i == 4:
 
-                    if is_between(value[-1], valor, np.inf):
+                    if is_between_min(value[-1], valor, np.inf):
                         rangos.append([text, 5, 5])
                 else:
-                    if is_between(value[i - 1], valor, value[i]):
+                    if is_between_max(value[i - 1], valor, value[i]):
                         rangos.append([
                             text,
                             remap(valor, value[0], value[-1], 0, 5), i + 1
@@ -350,15 +354,15 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
             text = key + " : " + str(valor)
             for i in range(0, 5, 1):
                 if i == 0:
-                    if is_between(0, valor, value[i]):
+                    if is_between_max(0, valor, value[i]):
                         rangos.append([text, 1, 1])
                 if i == 4:
 
-                    if is_between(value[-1], valor, np.inf):
+                    if is_between_min(value[-1], valor, np.inf):
                         print("?")
                         rangos.append([text, 5, 5])
                 else:
-                    if is_between(value[i - 1], valor, value[i]):
+                    if is_between_max(value[i - 1], valor, value[i]):
                         rangos.append([
                             text,
                             remap(valor, value[0], value[-1], 0, 5), i + 1
@@ -387,15 +391,15 @@ def generate_pdf(c_lab, muestras, ordenes, cliente, municipios, finca,
             text = map_elementos[key] + " : " + str(valor)
             for i in range(0, 5, 1):
                 if i == 0:
-                    if is_between(0, valor, value[i]):
+                    if is_between_max(0, valor, value[i]):
                         rangos.append([text, 1, 1])
                 if i == 4:
 
-                    if is_between(value[-1], valor, np.inf):
+                    if is_between_min(value[-1], valor, np.inf):
                         print("?")
                         rangos.append([text, 5, 5])
                 else:
-                    if is_between(value[i - 1], valor, value[i]):
+                    if is_between_max(value[i - 1], valor, value[i]):
                         rangos.append([
                             text,
                             remap(valor, value[0], value[-1], 0, 5), i + 1
